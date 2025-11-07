@@ -8,23 +8,115 @@
 
 ## Prerequisites
 
-ต้องมี:
-- ✅ Docker & Docker Compose
-- ✅ **xiao-world รันอยู่ที่** `localhost:18060`
-- ✅ API Keys สำหรับ platforms (Twitter, Facebook, etc.)
+ต้องมีติดตั้งแล้ว:
+- ✅ Docker & Docker Compose ([ดาวน์โหลด](https://www.docker.com/get-started))
+- ✅ Go 1.20+ ([ดาวน์โหลด](https://go.dev/dl/))
+- ✅ Git
 
-**เช็ค xiao-world:**
+---
+
+## Setup (4 Steps)
+
+### Step 0: ติดตั้งและรัน xiao-world
+
+**ทำอันนี้ก่อน!** ไม่งั้น n8n จะเชื่อมต่อไม่ได้
+
+#### 0.1 Clone และ Setup
+
+```bash
+# 1. Clone repository
+git clone https://github.com/huge8888/xiao-world.git
+cd xiao-world
+
+# 2. สร้างไฟล์ .env
+cp .env.example .env
+```
+
+#### 0.2 ใส่ API Keys
+
+แก้ไขไฟล์ `.env` ใส่ API keys ของคุณ:
+
+```bash
+# เปิดไฟล์ .env ด้วย text editor
+nano .env  # หรือ vim, code, notepad++ ก็ได้
+```
+
+**ตัวอย่าง .env:**
+```env
+# Twitter (ต้องมี!)
+TWITTER_API_KEY=your_twitter_api_key
+TWITTER_API_SECRET=your_twitter_api_secret
+TWITTER_ACCESS_TOKEN=your_access_token
+TWITTER_ACCESS_SECRET=your_access_secret
+
+# Facebook (ต้องมี!)
+FACEBOOK_PAGE_ID=your_page_id
+FACEBOOK_ACCESS_TOKEN=your_facebook_token
+
+# AI Translation (ไม่บังคับ)
+OPENAI_API_KEY=sk-...
+# หรือ
+ANTHROPIC_API_KEY=sk-ant-...
+# หรือ
+GOOGLE_API_KEY=...
+
+# TikTok, YouTube (ไม่บังคับ)
+# TIKTOK_...=...
+# YOUTUBE_...=...
+```
+
+**วิธีหา API Keys:**
+- **Twitter:** https://developer.twitter.com/en/portal/dashboard
+- **Facebook:** https://developers.facebook.com/apps/
+- **OpenAI:** https://platform.openai.com/api-keys
+
+#### 0.3 รัน xiao-world
+
+```bash
+# Build และรัน
+go run .
+
+# หรือ build ก่อน
+go build -o xiao-world
+./xiao-world
+```
+
+**ดูว่ารันสำเร็จ:**
+```
+🚀 Starting xiao-world MCP server...
+✅ Server listening on :18060
+```
+
+#### 0.4 ทดสอบว่า xiao-world รันอยู่
+
+**เปิด terminal ใหม่** แล้วรันคำสั่งนี้:
+
 ```bash
 curl http://localhost:18060/mcp -X POST \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}'
 ```
 
+**ถ้าได้ response แบบนี้ = สำเร็จ! ✅**
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "protocolVersion": "2024-11-05",
+    "serverInfo": {...}
+  },
+  "id": 1
+}
+```
+
+**ถ้า Error = xiao-world ยังไม่รัน ❌**
+```
+curl: (7) Failed to connect to localhost port 18060: Connection refused
+```
+
 ---
 
-## Quick Setup (3 Steps)
-
-### 1. รัน n8n
+### Step 1: รัน n8n
 
 ```bash
 # ใช้ Docker Compose (แนะนำ)
@@ -45,7 +137,9 @@ docker run -d --name n8n \
 - กรอก Email, Password (จดไว้!)
 - คลิก Continue
 
-### 2. Import Workflow
+---
+
+### Step 2: Import Workflow
 
 1. เข้า n8n → **Workflows** tab
 2. คลิก **"+ Add workflow"** → **"Import from file"**
@@ -53,7 +147,9 @@ docker run -d --name n8n \
 4. คลิก **Import**
 5. คลิก **Save**
 
-### 3. ตั้งค่า Feed ID
+---
+
+### Step 3: ตั้งค่า Feed ID
 
 1. คลิก node **"📝 ตั้งค่า Feed ID"**
 2. แก้ไข `feed_id` และ `xsec_token`:
