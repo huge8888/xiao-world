@@ -47,11 +47,27 @@ func main() {
 		publishersConfig = configs.GetPublishersConfig()
 	}
 
-	// 初始化翻译器（支持 Google Translate API key，如未设置则使用免费服务）
-	googleAPIKey := os.Getenv("GOOGLE_TRANSLATE_API_KEY")
-	trans := translator.NewGoogleTranslator(googleAPIKey)
-	if googleAPIKey == "" {
-		logrus.Info("未设置 GOOGLE_TRANSLATE_API_KEY，将使用免费翻译服务（有速率限制）")
+	// 初始化翻译器 - รองรับ AI หลายตัว (ChatGPT, Claude, Gemini) และ Google Translate
+	var trans translator.Translator
+
+	// ตรวจสอบว่าจะใช้ AI provider ไหน
+	aiProvider := os.Getenv("AI_TRANSLATOR_PROVIDER") // openai, anthropic, google, google-translate
+	aiAPIKey := os.Getenv("AI_TRANSLATOR_API_KEY")
+	aiModel := os.Getenv("AI_TRANSLATOR_MODEL") // ไม่บังคับ จะใช้ค่าเริ่มต้น
+
+	if aiProvider != "" && aiProvider != "google-translate" && aiAPIKey != "" {
+		// ใช้ AI Translator
+		trans = translator.NewAITranslator(aiProvider, aiAPIKey, aiModel)
+		logrus.Infof("✅ ใช้ AI Translator: %s (model: %s)", aiProvider, aiModel)
+	} else {
+		// ใช้ Google Translate (เดิม)
+		googleAPIKey := os.Getenv("GOOGLE_TRANSLATE_API_KEY")
+		trans = translator.NewGoogleTranslator(googleAPIKey)
+		if googleAPIKey == "" {
+			logrus.Info("⚠️ ใช้ Google Translate ฟรี (มีข้อจำกัด rate limit)")
+		} else {
+			logrus.Info("✅ ใช้ Google Translate API")
+		}
 	}
 
 	// 初始化内容处理器
