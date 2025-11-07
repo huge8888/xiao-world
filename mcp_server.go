@@ -76,6 +76,32 @@ type FavoriteFeedArgs struct {
 	Unfavorite bool   `json:"unfavorite,omitempty" jsonschema:"是否取消收藏，true为取消收藏，false或未设置则为收藏"`
 }
 
+// PublishToPlatformArgs 发布到特定平台的参数
+type PublishToPlatformArgs struct {
+	FeedID    string `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表或搜索结果获取"`
+	XsecToken string `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
+}
+
+// PublishToAllPlatformsArgs 发布到所有平台的参数
+type PublishToAllPlatformsArgs struct {
+	FeedID    string   `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表或搜索结果获取"`
+	XsecToken string   `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
+	Platforms []string `json:"platforms,omitempty" jsonschema:"平台列表（可选），支持: twitter, tiktok, facebook, youtube。如不指定则发布到所有已启用的平台"`
+}
+
+// SchedulePublishArgs 定时发布的参数
+type SchedulePublishArgs struct {
+	FeedID      string   `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表或搜索结果获取"`
+	XsecToken   string   `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
+	Platforms   []string `json:"platforms" jsonschema:"平台列表，支持: twitter, tiktok, facebook, youtube"`
+	ScheduledAt string   `json:"scheduled_at" jsonschema:"定时发布时间，格式: 2006-01-02 15:04:05"`
+}
+
+// CancelScheduledJobArgs 取消定时任务的参数
+type CancelScheduledJobArgs struct {
+	JobID string `json:"job_id" jsonschema:"任务ID，从schedule_publish返回或list_scheduled_jobs获取"`
+}
+
 // InitMCPServer 初始化 MCP Server
 func InitMCPServer(appServer *AppServer) *mcp.Server {
 	// 创建 MCP Server
@@ -309,7 +335,103 @@ func registerTools(server *mcp.Server, appServer *AppServer) {
 		}),
 	)
 
-	logrus.Infof("Registered %d MCP tools", 12)
+	// 工具 13: 发布到 Twitter
+	mcp.AddTool(server,
+		&mcp.Tool{
+			Name:        "publish_to_twitter",
+			Description: "将小红书笔记内容发布到 Twitter/X（自动翻译为英文）",
+		},
+		withPanicRecovery("publish_to_twitter", func(ctx context.Context, req *mcp.CallToolRequest, args PublishToPlatformArgs) (*mcp.CallToolResult, any, error) {
+			result := appServer.handlePublishToPlatform(ctx, args.FeedID, args.XsecToken, "twitter")
+			return convertToMCPResult(result), nil, nil
+		}),
+	)
+
+	// 工具 14: 发布到 TikTok
+	mcp.AddTool(server,
+		&mcp.Tool{
+			Name:        "publish_to_tiktok",
+			Description: "将小红书笔记内容发布到 TikTok（仅支持视频内容，自动翻译为英文）",
+		},
+		withPanicRecovery("publish_to_tiktok", func(ctx context.Context, req *mcp.CallToolRequest, args PublishToPlatformArgs) (*mcp.CallToolResult, any, error) {
+			result := appServer.handlePublishToPlatform(ctx, args.FeedID, args.XsecToken, "tiktok")
+			return convertToMCPResult(result), nil, nil
+		}),
+	)
+
+	// 工具 15: 发布到 Facebook
+	mcp.AddTool(server,
+		&mcp.Tool{
+			Name:        "publish_to_facebook",
+			Description: "将小红书笔记内容发布到 Facebook（自动翻译为英文）",
+		},
+		withPanicRecovery("publish_to_facebook", func(ctx context.Context, req *mcp.CallToolRequest, args PublishToPlatformArgs) (*mcp.CallToolResult, any, error) {
+			result := appServer.handlePublishToPlatform(ctx, args.FeedID, args.XsecToken, "facebook")
+			return convertToMCPResult(result), nil, nil
+		}),
+	)
+
+	// 工具 16: 发布到 YouTube
+	mcp.AddTool(server,
+		&mcp.Tool{
+			Name:        "publish_to_youtube",
+			Description: "将小红书笔记内容发布到 YouTube（仅支持视频内容，自动翻译为英文）",
+		},
+		withPanicRecovery("publish_to_youtube", func(ctx context.Context, req *mcp.CallToolRequest, args PublishToPlatformArgs) (*mcp.CallToolResult, any, error) {
+			result := appServer.handlePublishToPlatform(ctx, args.FeedID, args.XsecToken, "youtube")
+			return convertToMCPResult(result), nil, nil
+		}),
+	)
+
+	// 工具 17: 发布到所有平台
+	mcp.AddTool(server,
+		&mcp.Tool{
+			Name:        "publish_to_all_platforms",
+			Description: "将小红书笔记内容同时发布到多个平台（Twitter, TikTok, Facebook, YouTube），自动翻译为英文",
+		},
+		withPanicRecovery("publish_to_all_platforms", func(ctx context.Context, req *mcp.CallToolRequest, args PublishToAllPlatformsArgs) (*mcp.CallToolResult, any, error) {
+			result := appServer.handlePublishToAllPlatforms(ctx, args)
+			return convertToMCPResult(result), nil, nil
+		}),
+	)
+
+	// 工具 18: 定时发布
+	mcp.AddTool(server,
+		&mcp.Tool{
+			Name:        "schedule_publish",
+			Description: "创建定时发布任务，在指定时间将小红书笔记发布到指定平台",
+		},
+		withPanicRecovery("schedule_publish", func(ctx context.Context, req *mcp.CallToolRequest, args SchedulePublishArgs) (*mcp.CallToolResult, any, error) {
+			result := appServer.handleSchedulePublish(ctx, args)
+			return convertToMCPResult(result), nil, nil
+		}),
+	)
+
+	// 工具 19: 查看定时任务列表
+	mcp.AddTool(server,
+		&mcp.Tool{
+			Name:        "list_scheduled_jobs",
+			Description: "查看所有定时发布任务及其状态",
+		},
+		withPanicRecovery("list_scheduled_jobs", func(ctx context.Context, req *mcp.CallToolRequest, _ any) (*mcp.CallToolResult, any, error) {
+			result := appServer.handleListScheduledJobs(ctx)
+			return convertToMCPResult(result), nil, nil
+		}),
+	)
+
+	// 工具 20: 取消定时任务
+	mcp.AddTool(server,
+		&mcp.Tool{
+			Name:        "cancel_scheduled_job",
+			Description: "取消指定的定时发布任务",
+		},
+		withPanicRecovery("cancel_scheduled_job", func(ctx context.Context, req *mcp.CallToolRequest, args CancelScheduledJobArgs) (*mcp.CallToolResult, any, error) {
+			result := appServer.handleCancelScheduledJob(ctx, args.JobID)
+			return convertToMCPResult(result), nil, nil
+		}),
+	)
+
+	logrus.Infof("Registered %d MCP tools", 20)
 }
 
 // convertToMCPResult 将自定义的 MCPToolResult 转换为官方 SDK 的格式

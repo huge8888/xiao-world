@@ -11,6 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/sirupsen/logrus"
+	"github.com/xpzouying/xiaohongshu-mcp/pkg/publishers"
+	"github.com/xpzouying/xiaohongshu-mcp/pkg/scheduler"
+	"github.com/xpzouying/xiaohongshu-mcp/pkg/types"
 )
 
 // AppServer 应用服务器结构体，封装所有服务和处理器
@@ -19,6 +22,8 @@ type AppServer struct {
 	mcpServer          *mcp.Server
 	router             *gin.Engine
 	httpServer         *http.Server
+	scheduler          *scheduler.Scheduler
+	publishers         map[types.Platform]publishers.Publisher
 }
 
 // NewAppServer 创建新的应用服务器实例

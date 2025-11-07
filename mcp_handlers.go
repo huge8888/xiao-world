@@ -35,7 +35,7 @@ func (s *AppServer) handleCheckLoginStatus(ctx context.Context) *MCPToolResult {
 	} else {
 		resultText = fmt.Sprintf("❌ 未登录\n\n请使用 get_login_qrcode 工具获取二维码进行登录。")
 	}
-	
+
 	return &MCPToolResult{
 		Content: []MCPContent{{
 			Type: "text",
