@@ -1,0 +1,242 @@
+{
+  "name": "🌍 Xiao-World: Multi-Platform Publisher",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "เริ่มต้น Manual",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "feed_id",
+              "name": "feed_id",
+              "value": "your_feed_id_here",
+              "type": "string"
+            },
+            {
+              "id": "xsec_token",
+              "name": "xsec_token",
+              "value": "your_token_here",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-feed-id",
+      "name": "📝 ตั้งค่า Feed ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:18060/mcp",
+        "authentication": "none",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"get_feed_detail\",\n    \"arguments\": {\n      \"feed_id\": \"{{ $json.feed_id }}\",\n      \"xsec_token\": \"{{ $json.xsec_token }}\"\n    }\n  },\n  \"id\": 1\n}",
+        "options": {}
+      },
+      "id": "get-feed-detail",
+      "name": "📥 ดึงข้อมูลจากเสี้ยวหงชู",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse MCP response\nconst result = $input.item.json;\nconst content = result.result.content[0];\nconst data = JSON.parse(content.text);\n\nreturn {\n  feed_id: $input.item.json.feed_id || items[0].json.feed_id,\n  title: data.title,\n  content: data.desc,\n  images: data.images || [],\n  tags: data.tag_list || []\n};"
+      },
+      "id": "parse-data",
+      "name": "🔧 แปลงข้อมูล",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:18060/mcp",
+        "authentication": "none",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"publish_to_twitter\",\n    \"arguments\": {\n      \"feed_id\": \"{{ $json.feed_id }}\",\n      \"xsec_token\": \"{{ $('📝 ตั้งค่า Feed ID').item.json.xsec_token }}\"\n    }\n  },\n  \"id\": 2\n}",
+        "options": {}
+      },
+      "id": "publish-twitter",
+      "name": "🐦 โพสต์ไป Twitter",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:18060/mcp",
+        "authentication": "none",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"publish_to_facebook\",\n    \"arguments\": {\n      \"feed_id\": \"{{ $json.feed_id }}\",\n      \"xsec_token\": \"{{ $('📝 ตั้งค่า Feed ID').item.json.xsec_token }}\"\n    }\n  },\n  \"id\": 3\n}",
+        "options": {}
+      },
+      "id": "publish-facebook",
+      "name": "📘 โพสต์ไป Facebook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "merge-results",
+      "name": "📊 รวมผลลัพธ์",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format final output\nconst feedData = items[0].json;\nconst twitterResult = items[1].json;\nconst facebookResult = items[2].json;\n\n// Parse Twitter result\nlet twitterStatus = {};\ntry {\n  const twitterContent = twitterResult.result.content[0];\n  twitterStatus = JSON.parse(twitterContent.text);\n} catch (e) {\n  twitterStatus = { status: 'error', message: 'Failed to parse' };\n}\n\n// Parse Facebook result\nlet facebookStatus = {};\ntry {\n  const facebookContent = facebookResult.result.content[0];\n  facebookStatus = JSON.parse(facebookContent.text);\n} catch (e) {\n  facebookStatus = { status: 'error', message: 'Failed to parse' };\n}\n\nreturn {\n  feed_info: {\n    feed_id: feedData.feed_id,\n    title: feedData.title,\n    content: feedData.content.substring(0, 100) + '...'\n  },\n  publish_results: {\n    twitter: twitterStatus,\n    facebook: facebookStatus\n  },\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "format-output",
+      "name": "✅ สรุปผลลัพธ์",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    }
+  ],
+  "connections": {
+    "เริ่มต้น Manual": {
+      "main": [
+        [
+          {
+            "node": "📝 ตั้งค่า Feed ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📝 ตั้งค่า Feed ID": {
+      "main": [
+        [
+          {
+            "node": "📥 ดึงข้อมูลจากเสี้ยวหงชู",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📥 ดึงข้อมูลจากเสี้ยวหงชู": {
+      "main": [
+        [
+          {
+            "node": "🔧 แปลงข้อมูล",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔧 แปลงข้อมูล": {
+      "main": [
+        [
+          {
+            "node": "🐦 โพสต์ไป Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📘 โพสต์ไป Facebook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🐦 โพสต์ไป Twitter": {
+      "main": [
+        [
+          {
+            "node": "📊 รวมผลลัพธ์",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📘 โพสต์ไป Facebook": {
+      "main": [
+        [
+          {
+            "node": "📊 รวมผลลัพธ์",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "📊 รวมผลลัพธ์": {
+      "main": [
+        [
+          {
+            "node": "✅ สรุปผลลัพธ์",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-07T00:00:00.000Z",
+  "versionId": "1"
+}

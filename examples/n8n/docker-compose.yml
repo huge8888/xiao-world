@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: xiao-world-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      # Basic Settings
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+
+      # Timezone
+      - GENERIC_TIMEZONE=Asia/Bangkok
+      - TZ=Asia/Bangkok
+
+      # Security (optional - uncomment for production)
+      # - N8N_BASIC_AUTH_ACTIVE=true
+      # - N8N_BASIC_AUTH_USER=admin
+      # - N8N_BASIC_AUTH_PASSWORD=change_me_please
+
+      # Locale (optional - for Thai interface)
+      # - N8N_DEFAULT_LOCALE=th-TH
+    volumes:
+      # Persistent data
+      - n8n_data:/home/node/.n8n
+      # Workflows (optional - for backup)
+      - ./workflows:/workflows
+    extra_hosts:
+      # Allow n8n to connect to xiao-world on host machine
+      - "host.docker.internal:host-gateway"
+    networks:
+      - xiao-world-network
+
+volumes:
+  n8n_data:
+
+networks:
+  xiao-world-network:
+    driver: bridge
