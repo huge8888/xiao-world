@@ -20,14 +20,14 @@ import (
 func main() {
 	var (
 		headless   bool
-		binPath    string // 浏览器二进制文件路径
+		binPath    string // เส้นทางไฟล์ binary ของเบราว์เซอร์
 		port       string
-		configPath string // 发布平台配置文件路径
+		configPath string // เส้นทางไฟล์ config ของแพลตฟอร์ม
 	)
-	flag.BoolVar(&headless, "headless", true, "是否无头模式")
-	flag.StringVar(&binPath, "bin", "", "浏览器二进制文件路径")
-	flag.StringVar(&port, "port", ":18060", "端口")
-	flag.StringVar(&configPath, "config", "", "发布平台配置文件路径")
+	flag.BoolVar(&headless, "headless", true, "ใช้โหมด headless หรือไม่")
+	flag.StringVar(&binPath, "bin", "", "เส้นทางไฟล์ binary ของเบราว์เซอร์")
+	flag.StringVar(&port, "port", ":18060", "พอร์ต")
+	flag.StringVar(&configPath, "config", "", "เส้นทางไฟล์ config ของแพลตฟอร์ม")
 	flag.Parse()
 
 	if len(binPath) == 0 {
@@ -37,17 +37,17 @@ func main() {
 	configs.InitHeadless(headless)
 	configs.SetBinPath(binPath)
 
-	// 初始化服务
+	// เริ่มต้นบริการ
 	xiaohongshuService := NewXiaohongshuService()
 
-	// 加载发布平台配置
+	// โหลดการตั้งค่าแพลตฟอร์ม
 	publishersConfig, err := configs.LoadPublishersConfig(configPath)
 	if err != nil {
-		logrus.Warnf("加载发布平台配置失败: %v，将使用环境变量", err)
+		logrus.Warnf("โหลดการตั้งค่าแพลตฟอร์มล้มเหลว: %v, จะใช้ environment variables แทน", err)
 		publishersConfig = configs.GetPublishersConfig()
 	}
 
-	// 初始化翻译器 - รองรับ AI หลายตัว (ChatGPT, Claude, Gemini) และ Google Translate
+	// เริ่มต้น translator - รองรับ AI หลายตัว (ChatGPT, Claude, Gemini) และ Google Translate
 	var trans translator.Translator
 
 	// ตรวจสอบว่าจะใช้ AI provider ไหน
@@ -70,52 +70,52 @@ func main() {
 		}
 	}
 
-	// 初始化内容处理器
+	// เริ่มต้นตัวประมวลผลเนื้อหา
 	proc := processor.NewProcessor(trans)
 
-	// 初始化各平台发布器
+	// เริ่มต้น publisher แต่ละแพลตฟอร์ม
 	publishersMap := make(map[types.Platform]publishers.Publisher)
 
 	twitterPub := twitterPublisher.NewPublisher(publishersConfig.Twitter)
 	if twitterPub.IsEnabled() {
 		publishersMap[types.PlatformTwitter] = twitterPub
-		logrus.Info("✅ Twitter 发布器已启用")
+		logrus.Info("✅ Twitter publisher เปิดใช้งานแล้ว")
 	} else {
-		logrus.Info("⚠️ Twitter 发布器未启用")
+		logrus.Info("⚠️ Twitter publisher ไม่ได้เปิดใช้งาน")
 	}
 
 	tiktokPub := tiktokPublisher.NewPublisher(publishersConfig.TikTok)
 	if tiktokPub.IsEnabled() {
 		publishersMap[types.PlatformTikTok] = tiktokPub
-		logrus.Info("✅ TikTok 发布器已启用")
+		logrus.Info("✅ TikTok publisher เปิดใช้งานแล้ว")
 	} else {
-		logrus.Info("⚠️ TikTok 发布器未启用")
+		logrus.Info("⚠️ TikTok publisher ไม่ได้เปิดใช้งาน")
 	}
 
 	facebookPub := facebookPublisher.NewPublisher(publishersConfig.Facebook)
 	if facebookPub.IsEnabled() {
 		publishersMap[types.PlatformFacebook] = facebookPub
-		logrus.Info("✅ Facebook 发布器已启用")
+		logrus.Info("✅ Facebook publisher เปิดใช้งานแล้ว")
 	} else {
-		logrus.Info("⚠️ Facebook 发布器未启用")
+		logrus.Info("⚠️ Facebook publisher ไม่ได้เปิดใช้งาน")
 	}
 
 	youtubePub := youtubePublisher.NewPublisher(publishersConfig.YouTube)
 	if youtubePub.IsEnabled() {
 		publishersMap[types.PlatformYouTube] = youtubePub
-		logrus.Info("✅ YouTube 发布器已启用")
+		logrus.Info("✅ YouTube publisher เปิดใช้งานแล้ว")
 	} else {
-		logrus.Info("⚠️ YouTube 发布器未启用")
+		logrus.Info("⚠️ YouTube publisher ไม่ได้เปิดใช้งาน")
 	}
 
-	// 初始化调度器
+	// เริ่มต้น scheduler
 	sched := scheduler.NewScheduler(proc, publishersMap)
 	sched.Start()
 	defer sched.Stop()
 
-	logrus.Infof("🚀 多平台发布系统已初始化，启用了 %d 个平台", len(publishersMap))
+	logrus.Infof("🚀 ระบบเผยแพร่หลายแพลตฟอร์มเริ่มต้นแล้ว เปิดใช้งาน %d แพลตฟอร์ม", len(publishersMap))
 
-	// 创建并启动应用服务器
+	// สร้างและเริ่มต้น app server
 	appServer := NewAppServer(xiaohongshuService)
 	appServer.scheduler = sched
 	appServer.publishers = publishersMap
