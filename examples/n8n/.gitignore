@@ -1,0 +1,14 @@
+# n8n data
+n8n_data/
+*.db
+
+# Backup files
+*.tar.gz
+*.zip
+
+# Logs
+*.log
+
+# Workflows backup (ไม่เก็บถ้าไม่ต้องการ)
+workflows/*.json
+!workflows/.gitkeep
