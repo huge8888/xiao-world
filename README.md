@@ -1,816 +1,809 @@
-# xiaohongshu-mcp
+# 🌍 Xiao-World - ระบบเผยแพร่เนื้อหาหลายแพลตฟอร์ม
 
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-
-[![已捐赠](https://img.shields.io/badge/Donated-CNY%20200.00-brightgreen?style=flat-square)](./DONATIONS.md)
-[![获得赞赏](https://img.shields.io/badge/Received-CNY%20179.92-blue?style=flat-square)](./DONATIONS.md)
-[![Docker Pulls](https://img.shields.io/docker/pulls/xpzouying/xiaohongshu-mcp?style=flat-square&logo=docker)](https://hub.docker.com/r/xpzouying/xiaohongshu-mcp)
-
-MCP for 小红书/xiaohongshu.com。
-
-- 我的博客文章：[haha.ai/xiaohongshu-mcp](https://www.haha.ai/xiaohongshu-mcp)
-
-**遇到任何问题，务必要先看 [各种疑难杂症](https://github.com/xpzouying/xiaohongshu-mcp/issues/56)**。
-
-上面的 **疑难杂症** 列表后，还是解决不了你的部署问题，那么强烈推荐使用我写的另外一个工具：[xpzouying/x-mcp](https://github.com/xpzouying/x-mcp)，这个工具不需要你进行部署，只需要通过浏览器插件就能驱动你的 MCP，对于非技术同学来说更加友好。
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=xpzouying/xiaohongshu-mcp&type=Timeline)](https://www.star-history.com/#xpzouying/xiaohongshu-mcp&Timeline)
-
-## 赞赏支持
-
-本项目所有的赞赏都会用于慈善捐赠。所有的慈善捐赠记录，请参考 [DONATIONS.md](./DONATIONS.md)。
-
-**捐赠时，请备注 MCP 以及名字。**
-如需更正/撤回署名，请开 Issue 或通过邮箱联系。
-
-**支付宝（不展示二维码）：**
-
-通过支付宝向 **xpzouying@gmail.com** 赞赏。
-
-**微信：**
-
-<img src="donate/wechat@2x.png" alt="WeChat Pay QR" width="260" />
-
-## 项目简介
-
-**主要功能**
-
-> 💡 **提示：** 点击下方功能标题可展开查看视频演示
-
-<details>
-<summary><b>1. 登录和检查登录状态</b></summary>
-
-第一步必须，小红书需要进行登录。可以检查当前登录状态。
-
-**登录演示：**
-
-https://github.com/user-attachments/assets/8b05eb42-d437-41b7-9235-e2143f19e8b7
-
-**检查登录状态演示：**
-
-https://github.com/user-attachments/assets/bd9a9a4a-58cb-4421-b8f3-015f703ce1f9
-
-</details>
-
-<details>
-<summary><b>2. 发布图文内容</b></summary>
-
-支持发布图文内容到小红书，包括标题、内容描述和图片。
-
-**图片支持方式：**
-
-支持两种图片输入方式：
-
-1. **HTTP/HTTPS 图片链接**
-
-   ```
-   ["https://example.com/image1.jpg", "https://example.com/image2.png"]
-   ```
-
-2. **本地图片绝对路径**（推荐）
-   ```
-   ["/Users/username/Pictures/image1.jpg", "/home/user/images/image2.png"]
-   ```
-
-**为什么推荐使用本地路径：**
-
-- ✅ 稳定性更好，不依赖网络
-- ✅ 上传速度更快
-- ✅ 避免图片链接失效问题
-- ✅ 支持更多图片格式
-
-**发布图文帖子演示：**
-
-https://github.com/user-attachments/assets/8aee0814-eb96-40af-b871-e66e6bbb6b06
-
-</details>
-
-<details>
-<summary><b>3. 发布视频内容</b></summary>
-
-支持发布视频内容到小红书，包括标题、内容描述和本地视频文件。
-
-**视频支持方式：**
-
-仅支持本地视频文件绝对路径：
-
-```
-"/Users/username/Videos/video.mp4"
-```
-
-**功能特点：**
-
-- ✅ 支持本地视频文件上传
-- ✅ 自动处理视频格式转换
-- ✅ 支持标题、内容描述和标签
-- ✅ 等待视频处理完成后自动发布
-
-**注意事项：**
-
-- 仅支持本地视频文件，不支持 HTTP 链接
-- 视频处理时间较长，请耐心等待
-- 建议视频文件大小不超过 1GB
-
-</details>
-
-<details>
-<summary><b>4. 搜索内容</b></summary>
-
-根据关键词搜索小红书内容。
-
-**搜索帖子演示：**
-
-https://github.com/user-attachments/assets/03c5077d-6160-4b18-b629-2e40933a1fd3
-
-</details>
-
-<details>
-<summary><b>5. 获取推荐列表</b></summary>
-
-获取小红书首页推荐内容列表。
-
-**获取推荐列表演示：**
-
-https://github.com/user-attachments/assets/110fc15d-46f2-4cca-bdad-9de5b5b8cc28
-
-</details>
-
-<details>
-<summary><b>6. 获取帖子详情（包括互动数据和评论）</b></summary>
-
-获取小红书帖子的完整详情，包括：
-
-- 帖子内容（标题、描述、图片等）
-- 用户信息
-- 互动数据（点赞、收藏、分享、评论数）
-- 评论列表及子评论
-
-**⚠️ 重要提示：**
-
-- 需要提供帖子 ID 和 xsec_token（两个参数缺一不可）
-- 这两个参数可以从 Feed 列表或搜索结果中获取
-- 必须先登录才能使用此功能
-
-**获取帖子详情演示：**
-
-https://github.com/user-attachments/assets/76a26130-a216-4371-a6b3-937b8fda092a
-
-</details>
-
-<details>
-<summary><b>7. 发表评论到帖子</b></summary>
-
-支持自动发表评论到小红书帖子。
-
-**功能说明：**
-
-- 自动定位评论输入框
-- 输入评论内容并发布
-- 支持 HTTP API 和 MCP 工具调用
-
-**⚠️ 重要提示：**
-
-- 需要先登录才能使用此功能
-- 需要提供帖子 ID、xsec_token 和评论内容
-- 这些参数可以从 Feed 列表或搜索结果中获取
-
-**发表评论演示：**
-
-https://github.com/user-attachments/assets/cc385b6c-422c-489b-a5fc-63e92c695b80
-
-</details>
-
-<details>
-<summary><b>8. 获取用户个人主页</b></summary>
-
-获取小红书用户的个人主页信息，包括用户基本信息和笔记内容。
-
-**功能说明：**
-
-- 获取用户基本信息（昵称、简介、头像等）
-- 获取关注数、粉丝数、获赞量统计
-- 获取用户发布的笔记内容列表
-- 支持 HTTP API 和 MCP 工具调用
-
-**⚠️ 重要提示：**
-
-- 需要先登录才能使用此功能
-- 需要提供用户 ID 和 xsec_token
-- 这些参数可以从 Feed 列表或搜索结果中获取
-
-**返回信息包括：**
-
-- 用户基本信息：昵称、简介、头像、认证状态
-- 统计数据：关注数、粉丝数、获赞量、笔记数
-- 笔记列表：用户发布的所有公开笔记
-
-</details>
-
-**小红书基础运营知识**
-
-- **标题：（非常重要）小红书要求标题不超过 20 个字**
-- **正文：（非常重要）：正文不能超过 1000 个字**
-- 当前支持图文发送以及视频发送：从推荐的角度看，图文的流量会比视频以及纯文字的更好。
-- （低优先级）可以考虑纯文字的支持。1. 个人感觉纯文字会大大增加运营的复杂度；2. 纯文字在我的使用场景的价值较低。
-- Tags：现已支持。添加合适的 Tags 能带来更多的流量。
-- 根据本人实操，小红书每天的发帖量应该是 **50 篇**。
-- **（非常重要）小红书的同一个账号不允许在多个网页端登录**，如果你登录了当前 xiaohongshu-mcp 后，就不要再在其他的网页端登录该账号，否则就会把当前 MCP 的账号“踢出登录”。你可以使用移动 App 端进行查看当前账号信息。
-
-**风险说明**
-
-1. 该项目是在自己的另外一个项目的基础上开源出来的，原来的项目稳定运行一年多，没有出现过封号的情况，只有出现过 Cookies 过期需要重新登录。
-2. 我是使用 Claude Code 接入，稳定自动化运营数周后，验证没有问题后开源。
-
-该项目是基于学习的目的，禁止一切违法行为。
-
-**实操结果**
-
-第一天点赞/收藏数达到了 999+，
-
-<img width="386" height="278" alt="CleanShot 2025-09-05 at 01 31 55@2x" src="https://github.com/user-attachments/assets/4b5a283b-bd38-45b8-b608-8f818997366c" />
-
-<img width="350" height="280" alt="CleanShot 2025-09-05 at 01 32 49@2x" src="https://github.com/user-attachments/assets/4481e1e7-3ef6-4bbd-8483-dcee8f77a8f2" />
-
-一周左右的成果
-
-<img width="1840" height="582" alt="CleanShot 2025-09-05 at 01 33 13@2x" src="https://github.com/user-attachments/assets/fb367944-dc48-4bbd-8ece-934caa86323e" />
-
-## 1. 使用教程
-
-### 1.1. 快速开始（推荐）
-
-**方式一：下载预编译二进制文件**
-
-直接从 [GitHub Releases](https://github.com/xpzouying/xiaohongshu-mcp/releases) 下载对应平台的二进制文件：
-
-**主程序（MCP 服务）：**
-
-- **macOS Apple Silicon**: `xiaohongshu-mcp-darwin-arm64`
-- **macOS Intel**: `xiaohongshu-mcp-darwin-amd64`
-- **Windows x64**: `xiaohongshu-mcp-windows-amd64.exe`
-- **Linux x64**: `xiaohongshu-mcp-linux-amd64`
-
-**登录工具：**
-
-- **macOS Apple Silicon**: `xiaohongshu-login-darwin-arm64`
-- **macOS Intel**: `xiaohongshu-login-darwin-amd64`
-- **Windows x64**: `xiaohongshu-login-windows-amd64.exe`
-- **Linux x64**: `xiaohongshu-login-linux-amd64`
-
-使用步骤：
-
-```bash
-# 1. 首先运行登录工具
-chmod +x xiaohongshu-login-darwin-arm64
-./xiaohongshu-login-darwin-arm64
-
-# 2. 然后启动 MCP 服务
-chmod +x xiaohongshu-mcp-darwin-arm64
-./xiaohongshu-mcp-darwin-arm64
-```
-
-**⚠️ 重要提示**：首次运行时会自动下载无头浏览器（约 150MB），请确保网络连接正常。后续运行无需重复下载。
-
-**方式二：源码编译**
-
-<details>
-<summary>源码编译安装详情</summary>
-
-依赖 Golang 环境，安装方法请参考 [Golang 官方文档](https://go.dev/doc/install)。
-
-设置 Go 国内源的代理，
-
-```bash
-# 配置 GOPROXY 环境变量，以下三选一
-
-# 1. 七牛 CDN
-go env -w  GOPROXY=https://goproxy.cn,direct
-
-# 2. 阿里云
-go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
-
-# 3. 官方
-go env -w  GOPROXY=https://goproxy.io,direct
-```
-
-</details>
-
-**方式三：使用 Docker 容器（最简单）**
-
-<details>
-<summary>Docker 部署详情</summary>
-
-使用 Docker 部署是最简单的方式，无需安装任何开发环境。
-
-**1. 从 Docker Hub 拉取镜像（推荐）**
-
-我们提供了预构建的 Docker 镜像，可以直接从 Docker Hub 拉取使用：
-
-```bash
-# 拉取最新镜像
-docker pull xpzouying/xiaohongshu-mcp
-```
-
-Docker Hub 地址：[https://hub.docker.com/r/xpzouying/xiaohongshu-mcp](https://hub.docker.com/r/xpzouying/xiaohongshu-mcp)
-
-**2. 使用 Docker Compose 启动（推荐）**
-
-我们提供了配置好的 `docker-compose.yml` 文件，可以直接使用：
-
-```bash
-# 下载 docker-compose.yml
-wget https://raw.githubusercontent.com/xpzouying/xiaohongshu-mcp/main/docker/docker-compose.yml
-
-# 或者如果已经克隆了项目，进入 docker 目录
-cd docker
-
-# 启动服务
-docker compose up -d
-
-# 查看日志
-docker compose logs -f
-
-# 停止服务
-docker compose stop
-```
-
-**3. 自己构建镜像（可选）**
-
-```bash
-# 在项目根目录运行
-docker build -t xpzouying/xiaohongshu-mcp .
-```
-
-**4. 配置说明**
-
-Docker 版本会自动：
-
-- 配置 Chrome 浏览器和中文字体
-- 挂载 `./data` 用于存储 cookies
-- 挂载 `./images` 用于存储发布的图片
-- 暴露 18060 端口供 MCP 连接
-
-详细使用说明请参考：[Docker 部署指南](./docker/README.md)
-
-</details>
-
-Windows 遇到问题首先看这里：[Windows 安装指南](./docs/windows_guide.md)
-
-### 1.2. 登录
-
-第一次需要手动登录，需要保存小红书的登录状态。
-
-**使用二进制文件**：
-
-```bash
-# 运行对应平台的登录工具
-./xiaohongshu-login-darwin-arm64
-```
-
-**使用源码**：
-
-```bash
-go run cmd/login/main.go
-```
-
-### 1.3. 启动 MCP 服务
-
-启动 xiaohongshu-mcp 服务。
-
-**使用二进制文件**：
-
-```bash
-# 默认：无头模式，没有浏览器界面
-./xiaohongshu-mcp-darwin-arm64
-
-# 非无头模式，有浏览器界面
-./xiaohongshu-mcp-darwin-arm64 -headless=false
-```
-
-**使用源码**：
-
-```bash
-# 默认：无头模式，没有浏览器界面
-go run .
-
-# 非无头模式，有浏览器界面
-go run . -headless=false
-```
-
-## 1.4. 验证 MCP
-
-```bash
-npx @modelcontextprotocol/inspector
-```
-
-![运行 Inspector](./assets/run_inspect.png)
-
-运行后，打开红色标记的链接，配置 MCP inspector，输入 `http://localhost:18060/mcp` ，点击 `Connect` 按钮。
-
-![配置 MCP inspector](./assets/inspect_mcp.png)
-
-按照上面配置 MCP inspector 后，点击 `List Tools` 按钮，查看所有的 Tools。
-
-## 1.5. 使用 MCP 发布
-
-### 检查登录状态
-
-![检查登录状态](./assets/check_login.gif)
-
-### 发布图文
-
-示例中是从 https://unsplash.com/ 中随机找了个图片做测试。
-
-![发布图文](./assets/inspect_mcp_publish.gif)
-
-### 搜索内容
-
-使用搜索功能，根据关键词搜索小红书内容：
-
-![搜索内容](./assets/search_result.png)
-
-## 2. MCP 客户端接入
-
-本服务支持标准的 Model Context Protocol (MCP)，可以接入各种支持 MCP 的 AI 客户端。
-
-### 2.1. 快速开始
-
-#### 启动 MCP 服务
-
-```bash
-# 启动服务（默认无头模式）
-go run .
-
-# 或者有界面模式
-go run . -headless=false
-```
-
-服务将运行在：`http://localhost:18060/mcp`
-
-#### 验证服务状态
-
-```bash
-# 测试 MCP 连接
-curl -X POST http://localhost:18060/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}'
-```
-
-#### Claude Code CLI 接入
-
-```bash
-# 添加 HTTP MCP 服务器
-claude mcp add --transport http xiaohongshu-mcp http://localhost:18060/mcp
-
-# 检查 MCP 是否添加成功（确保 MCP 已经启动的前提下，运行下面命令）
-claude mcp list
-```
-
-### 2.2. 支持的客户端
-
-<details>
-<summary><b>Claude Code CLI</b></summary>
-
-官方命令行工具，已在上面快速开始部分展示：
-
-```bash
-# 添加 HTTP MCP 服务器
-claude mcp add --transport http xiaohongshu-mcp http://localhost:18060/mcp
-
-# 检查 MCP 是否添加成功（确保 MCP 已经启动的前提下，运行下面命令）
-claude mcp list
-```
-
-</details>
-
-<details>
-<summary><b>Cursor</b></summary>
-
-#### 配置文件的方式
-
-创建或编辑 MCP 配置文件：
-
-**项目级配置**（推荐）：
-在项目根目录创建 `.cursor/mcp.json`：
-
-```json
-{
-  "mcpServers": {
-    "xiaohongshu-mcp": {
-      "url": "http://localhost:18060/mcp",
-      "description": "小红书内容发布服务 - MCP Streamable HTTP"
-    }
-  }
-}
-```
-
-**全局配置**：
-在用户目录创建 `~/.cursor/mcp.json` (同样内容)。
-
-#### 使用步骤
-
-1. 确保小红书 MCP 服务正在运行
-2. 保存配置文件后，重启 Cursor
-3. 在 Cursor 聊天中，工具应该自动可用
-4. 可以通过聊天界面的 "Available Tools" 查看已连接的 MCP 工具
-
-**Demo**
-
-插件 MCP 接入：
-
-![cursor_mcp_settings](./assets/cursor_mcp_settings.png)
-
-调用 MCP 工具：（以检查登录状态为例）
-
-![cursor_mcp_check_login](./assets/cursor_mcp_check_login.png)
-
-</details>
-
-<details>
-<summary><b>VSCode</b></summary>
-
-#### 方法一：使用命令面板配置
-
-1. 按 `Ctrl/Cmd + Shift + P` 打开命令面板
-2. 运行 `MCP: Add Server` 命令
-3. 选择 `HTTP` 方式。
-4. 输入地址： `http://localhost:18060/mcp`，或者修改成对应的 Server 地址。
-5. 输入 MCP 名字： `xiaohongshu-mcp`。
-
-#### 方法二：直接编辑配置文件
-
-**工作区配置**（推荐）：
-在项目根目录创建 `.vscode/mcp.json`：
-
-```json
-{
-  "servers": {
-    "xiaohongshu-mcp": {
-      "url": "http://localhost:18060/mcp",
-      "type": "http"
-    }
-  },
-  "inputs": []
-}
-```
-
-**查看配置**：
-
-![vscode_config](./assets/vscode_mcp_config.png)
-
-1. 确认运行状态。
-2. 查看 `tools` 是否正确检测。
-
-**Demo**
-
-以搜索帖子内容为例：
-
-![vscode_mcp_search](./assets/vscode_search_demo.png)
-
-</details>
-
-<details>
-<summary><b>Google Gemini CLI</b></summary>
-
-在 `~/.gemini/settings.json` 或项目目录 `.gemini/settings.json` 中配置：
-
-```json
-{
-  "mcpServers": {
-    "xiaohongshu": {
-      "httpUrl": "http://localhost:18060/mcp",
-      "timeout": 30000
-    }
-  }
-}
-```
-
-更多信息请参考 [Gemini CLI MCP 文档](https://google-gemini.github.io/gemini-cli/docs/tools/mcp-server.html)
-
-</details>
-
-<details>
-<summary><b>MCP Inspector</b></summary>
-
-调试工具，用于测试 MCP 连接：
-
-```bash
-# 启动 MCP Inspector
-npx @modelcontextprotocol/inspector
-
-# 在浏览器中连接到：http://localhost:18060/mcp
-```
-
-使用步骤：
-
-- 使用 MCP Inspector 测试连接
-- 测试 Ping Server 功能验证连接
-- 检查 List Tools 是否返回 6 个工具
-
-</details>
-
-<details>
-<summary><b>Cline</b></summary>
-
-Cline 是一个强大的 AI 编程助手，支持 MCP 协议集成。
-
-#### 配置方法
-
-在 Cline 的 MCP 设置中添加以下配置：
-
-```json
-{
-  "xiaohongshu-mcp": {
-    "url": "http://localhost:18060/mcp",
-    "type": "streamableHttp",
-    "autoApprove": [],
-    "disabled": false
-  }
-}
-```
-
-#### 使用步骤
-
-1. 确保小红书 MCP 服务正在运行（`http://localhost:18060/mcp`）
-2. 在 Cline 中打开 MCP 设置
-3. 添加上述配置到 MCP 服务器列表
-4. 保存配置并重启 Cline
-5. 在对话中可以直接使用小红书相关功能
-
-#### 配置说明
-
-- `url`: MCP 服务地址
-- `type`: 使用 `streamableHttp` 类型以获得更好的性能
-- `autoApprove`: 可配置自动批准的工具列表（留空表示手动批准）
-- `disabled`: 设置为 `false` 启用此 MCP 服务
-
-#### 使用示例
-
-配置完成后，可以在 Cline 中直接使用自然语言操作小红书：
-
-```
-帮我检查小红书登录状态
-```
-
-```
-帮我发布一篇关于春天的图文到小红书，使用这张图片：/path/to/spring.jpg
-```
-
-```
-搜索小红书上关于"美食"的内容
-```
-
-</details>
-
-<details>
-<summary><b>其他支持 HTTP MCP 的客户端</b></summary>
-
-任何支持 HTTP MCP 协议的客户端都可以连接到：`http://localhost:18060/mcp`
-
-基本配置模板：
-
-```json
-{
-  "name": "xiaohongshu-mcp",
-  "url": "http://localhost:18060/mcp",
-  "type": "http"
-}
-```
-
-</details>
-
-### 2.3. 可用 MCP 工具
-
-连接成功后，可使用以下 MCP 工具：
-
-- `check_login_status` - 检查小红书登录状态（无参数）
-- `publish_content` - 发布图文内容到小红书（必需：title, content, images）
-  - `images`: 支持 HTTP 链接或本地绝对路径，推荐使用本地路径
-- `publish_with_video` - 发布视频内容到小红书（必需：title, content, video）
-  - `video`: 仅支持本地视频文件绝对路径
-- `list_feeds` - 获取小红书首页推荐列表（无参数）
-- `search_feeds` - 搜索小红书内容（需要：keyword）
-- `get_feed_detail` - 获取帖子详情（需要：feed_id, xsec_token）
-- `post_comment_to_feed` - 发表评论到小红书帖子（需要：feed_id, xsec_token, content）
-- `user_profile` - 获取用户个人主页信息（需要：user_id, xsec_token）
-
-### 2.4. 使用示例
-
-使用 Claude Code 发布内容到小红书：
-
-**示例 1：使用 HTTP 图片链接**
-
-```
-帮我写一篇帖子发布到小红书上，
-配图为：https://cn.bing.com/th?id=OHR.MaoriRock_EN-US6499689741_UHD.jpg&w=3840
-图片是："纽西兰陶波湖的Ngātoroirangi矿湾毛利岩雕（© Joppi/Getty Images）"
-
-使用 xiaohongshu-mcp 进行发布。
-```
-
-**示例 2：使用本地图片路径（推荐）**
-
-```
-帮我写一篇关于春天的帖子发布到小红书上，
-使用这些本地图片：
-- /Users/username/Pictures/spring_flowers.jpg
-- /Users/username/Pictures/cherry_blossom.jpg
-
-使用 xiaohongshu-mcp 进行发布。
-```
-
-**示例 3：发布视频内容**
-
-```
-帮我写一篇关于美食制作的视频发布到小红书上，
-使用这个本地视频文件：
-- /Users/username/Videos/cooking_tutorial.mp4
-
-使用 xiaohongshu-mcp 的视频发布功能。
-```
-
-![claude-cli 进行发布](./assets/claude_push.gif)
-
-**发布结果：**
-
-<img src="./assets/publish_result.jpeg" alt="xiaohongshu-mcp 发布结果" width="300">
-
-## 3. 🌟 实战案例展示 (Community Showcases)
-
-> 💡 **强烈推荐查看**：这些都是社区贡献者的真实使用案例，包含详细的配置步骤和实战经验！
-
-### 📚 完整教程列表
-
-1. **[n8n 完整集成教程](./examples/n8n/README.md)** - 工作流自动化平台集成
-2. **[Cherry Studio 完整配置教程](./examples/cherrystudio/README.md)** - AI 客户端完美接入
-3. **[Claude Code + Kimi K2 接入教程](./examples/claude-code/claude-code-kimi-k2.md)** - Claude Code 门槛太高，那么就接入 Kimi 国产大模型吧～
-4. **[AnythingLLM 完整指南](./examples/anythingLLM/readme.md)** - AnythingLLM 是一款 all-in-one 多模态 AI 客户端，支持 workflow 定义，支持多种大模型和插件扩展。
-
-> 🎯 **提示**: 点击上方链接查看详细的图文教程，快速上手各种集成方案！
+> **ดึงเนื้อหาจากเสี้ยวหงชู (小红书) แปลภาษาด้วย AI แล้วเผยแพร่ไปทั่วโลก!**
 >
-> 📢 **欢迎贡献**: 如果你有新的集成案例，欢迎提交 PR 分享给社区！
+> รองรับ Twitter (X), TikTok, Facebook และ YouTube
 
-## 4. 小红书 MCP 互助群
+[![Made with Go](https://img.shields.io/badge/Made%20with-Go-00ADD8?style=flat-square&logo=go)](https://golang.org)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
-**重要：在群里问问题之前，请一定要先仔细看完 README 文档以及查看 Issues。**
+---
 
-<!-- 两列排布：飞书二群 | 微信群 -->
+## 📖 สารบัญ
 
-| 【飞书 3 群】：扫码进入                                                                                                   | 【微信群 10 群】：扫码进入                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| <img src="https://github.com/user-attachments/assets/9a0ec41a-cb65-4f4e-a0f7-31658a49512d" alt="qrcode_2qun" width="300"> | <img src="https://github.com/user-attachments/assets/a5f8fc69-e37a-4404-a611-4a601ba0b42f" alt="WechatIMG119" width="300"> |
+- [โปรแกรมนี้คืออะไร?](#โปรแกรมนี้คืออะไร)
+- [ทำอะไรได้บ้าง?](#ทำอะไรได้บ้าง)
+- [ติดตั้งอย่างไร? (แบบง่าย)](#ติดตั้งอย่างไร-แบบง่าย)
+- [ตั้งค่าอย่างไร?](#ตั้งค่าอย่างไร)
+- [เริ่มใช้งานอย่างไร?](#เริ่มใช้งานอย่างไร)
+- [**🤖 ใช้งานแบบ No-Code ด้วย n8n**](#-ใช้งานแบบ-no-code-ด้วย-n8n) ⭐ **ใหม่!**
+- [ตัวอย่างการใช้งาน](#ตัวอย่างการใช้งาน)
+- [แก้ปัญหาที่พบบ่อย](#แก้ปัญหาที่พบบ่อย)
+- [คำถามที่พบบ่อย (FAQ)](#คำถามที่พบบ่อย-faq)
 
+---
 
+## 🤔 โปรแกรมนี้คืออะไร?
 
+**Xiao-World** เป็นโปรแกรมที่ช่วยให้คุณ:
 
-## 🙏 致谢贡献者 ✨
+1. 📱 **ดึงเนื้อหาจากเสี้ยวหงชู** (小红书/RedNote) - รูปภาพ, วิดีโอ, ข้อความ
+2. 🤖 **แปลภาษาอัตโนมัติด้วย AI** - ใช้ ChatGPT, Claude หรือ Gemini
+3. 🌍 **เผยแพร่ไปหลายแพลตฟอร์ม** - Twitter, TikTok, Facebook, YouTube พร้อมกัน!
 
-感谢以下所有为本项目做出贡献的朋友！（排名不分先后）
+### เหมาะกับใคร?
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://haha.ai"><img src="https://avatars.githubusercontent.com/u/3946563?v=4?s=100" width="100px;" alt="zy"/><br /><sub><b>zy</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=xpzouying" title="Code">💻</a> <a href="#ideas-xpzouying" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=xpzouying" title="Documentation">📖</a> <a href="#design-xpzouying" title="Design">🎨</a> <a href="#maintenance-xpzouying" title="Maintenance">🚧</a> <a href="#infra-xpzouying" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/xpzouying/xiaohongshu-mcp/pulls?q=is%3Apr+reviewed-by%3Axpzouying" title="Reviewed Pull Requests">👀</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="http://www.hwbuluo.com"><img src="https://avatars.githubusercontent.com/u/1271815?v=4?s=100" width="100px;" alt="clearwater"/><br /><sub><b>clearwater</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=esperyong" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/laryzhong"><img src="https://avatars.githubusercontent.com/u/47939471?v=4?s=100" width="100px;" alt="Zhongpeng"/><br /><sub><b>Zhongpeng</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=laryzhong" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/DTDucas"><img src="https://avatars.githubusercontent.com/u/105262836?v=4?s=100" width="100px;" alt="Duong Tran"/><br /><sub><b>Duong Tran</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=DTDucas" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Angiin"><img src="https://avatars.githubusercontent.com/u/17389304?v=4?s=100" width="100px;" alt="Angiin"/><br /><sub><b>Angiin</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=Angiin" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/muhenan"><img src="https://avatars.githubusercontent.com/u/43441941?v=4?s=100" width="100px;" alt="Henan Mu"/><br /><sub><b>Henan Mu</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=muhenan" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/chengazhen"><img src="https://avatars.githubusercontent.com/u/52627267?v=4?s=100" width="100px;" alt="Journey"/><br /><sub><b>Journey</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=chengazhen" title="Code">💻</a></td>
-    </tr>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/eveyuyi"><img src="https://avatars.githubusercontent.com/u/69026872?v=4?s=100" width="100px;" alt="Eve Yu"/><br /><sub><b>Eve Yu</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=eveyuyi" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/CooperGuo"><img src="https://avatars.githubusercontent.com/u/183056602?v=4?s=100" width="100px;" alt="CooperGuo"/><br /><sub><b>CooperGuo</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=CooperGuo" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://biboyqg.github.io/"><img src="https://avatars.githubusercontent.com/u/125724218?v=4?s=100" width="100px;" alt="Banghao Chi"/><br /><sub><b>Banghao Chi</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=BiboyQG" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/varz1"><img src="https://avatars.githubusercontent.com/u/60377372?v=4?s=100" width="100px;" alt="varz1"/><br /><sub><b>varz1</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=varz1" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://google.meloguan.site"><img src="https://avatars.githubusercontent.com/u/62586556?v=4?s=100" width="100px;" alt="Melo Y Guan"/><br /><sub><b>Melo Y Guan</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=Meloyg" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lmxdawn"><img src="https://avatars.githubusercontent.com/u/21293193?v=4?s=100" width="100px;" alt="lmxdawn"/><br /><sub><b>lmxdawn</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=lmxdawn" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/haikow"><img src="https://avatars.githubusercontent.com/u/22428382?v=4?s=100" width="100px;" alt="haikow"/><br /><sub><b>haikow</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=haikow" title="Code">💻</a></td>
-    </tr>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://carlo-blog.aiju.fun/"><img src="https://avatars.githubusercontent.com/u/18513362?v=4?s=100" width="100px;" alt="Carlo"/><br /><sub><b>Carlo</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=a67793581" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/hrz394943230"><img src="https://avatars.githubusercontent.com/u/28583005?v=4?s=100" width="100px;" alt="hrz"/><br /><sub><b>hrz</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=hrz394943230" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ctrlz526"><img src="https://avatars.githubusercontent.com/u/143257420?v=4?s=100" width="100px;" alt="Ctrlz"/><br /><sub><b>Ctrlz</b></sub></a><br /><a href="https://github.com/xpzouying/xiaohongshu-mcp/commits?author=ctrlz526" title="Code">💻</a></td>
-    </tr>
-  </tbody>
-</table>
+- ✅ Content Creator ที่อยากขยายผู้ติดตามไปต่างประเทศ
+- ✅ นักการตลาดที่อยากทำ Multi-channel Marketing
+- ✅ ธุรกิจที่อยากประหยัดเวลาโพสต์เนื้อหา
+- ✅ ทุกคนที่อยากแชร์เนื้อหาไปหลายช่องทางอย่างง่ายดาย
 
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
+---
 
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+## ✨ ทำอะไรได้บ้าง?
 
-### ✨ 特别感谢
+### 🎯 ฟีเจอร์หลัก
 
-| 贡献者                                                                                                                      |
-| --------------------------------------------------------------------------------------------------------------------------- |
-| [<img src="https://avatars.githubusercontent.com/wanpengxie" width="100px;"><br>@wanpengxie](https://github.com/wanpengxie) |
+| ฟีเจอร์ | คำอธิบาย |
+|---------|----------|
+| 🤖 **แปลภาษา AI** | รองรับ ChatGPT (OpenAI), Claude (Anthropic), Gemini (Google) |
+| 🌍 **โพสต์หลายที่พร้อมกัน** | โพสต์ครั้งเดียว ไปได้ 4 แพลตฟอร์มพร้อมกัน |
+| ⏰ **ตั้งเวลาโพสต์** | กำหนดเวลาเผยแพร่ล่วงหน้าได้ |
+| 🔄 **ปรับเนื้อหาอัตโนมัติ** | ตัดหรือปรับข้อความให้เหมาะกับแต่ละแพลตฟอร์ม |
+| 📝 **รองรับหลายรูปแบบ** | ข้อความ, รูปภาพ, วิดีโอ |
 
-本项目遵循 [all-contributors](https://github.com/all-contributors/all-contributors) 规范。欢迎任何形式的贡献！
+### 📱 แพลตฟอร์มที่รองรับ
+
+| แพลตฟอร์ม | ข้อความ | รูปภาพ | วิดีโอ | หมายเหตุ |
+|-----------|---------|--------|--------|----------|
+| 🐦 **Twitter/X** | ✅ | ✅ สูงสุด 4 รูป | ❌ | ข้อความสูงสุด 280 ตัวอักษร |
+| 🎵 **TikTok** | ❌ | ❌ | ✅ | วิดีโอเท่านั้น |
+| 📘 **Facebook** | ✅ | ✅ ไม่จำกัด | ✅ | ไม่จำกัดความยาว |
+| 🎬 **YouTube** | ❌ | ❌ | ✅ | วิดีโอเท่านั้น (ขนาดใหญ่ได้) |
+
+---
+
+## 🚀 ติดตั้งอย่างไร? (แบบง่าย)
+
+### ขั้นตอนที่ 1: ตรวจสอบความพร้อม
+
+คุณต้องมี:
+- 💻 คอมพิวเตอร์ Windows, Mac หรือ Linux
+- 🌐 อินเทอร์เน็ต
+- 💾 พื้นที่ว่างประมาณ 500 MB
+
+### ขั้นตอนที่ 2: ติดตั้ง Go (ถ้ายังไม่มี)
+
+<details>
+<summary>📦 <b>คลิกเพื่อดูวิธีติดตั้ง Go</b></summary>
+
+#### สำหรับ Windows:
+
+1. เปิดเว็บ https://golang.org/dl/
+2. ดาวน์โหลด `go1.xx.x.windows-amd64.msi`
+3. Double click เพื่อติดตั้ง (กด Next จนเสร็จ)
+4. เปิด Command Prompt (CMD) และพิมพ์:
+   ```bash
+   go version
+   ```
+5. ถ้าเห็นเลขเวอร์ชัน แสดงว่าติดตั้งสำเร็จ! ✅
+
+#### สำหรับ Mac:
+
+1. เปิด Terminal
+2. ติดตั้งด้วย Homebrew (แนะนำ):
+   ```bash
+   brew install go
+   ```
+   หรือ ดาวน์โหลดจาก https://golang.org/dl/
+3. ตรวจสอบ:
+   ```bash
+   go version
+   ```
+
+#### สำหรับ Linux (Ubuntu/Debian):
+
+```bash
+# ดาวน์โหลดและติดตั้ง
+sudo apt update
+sudo apt install golang-go
+
+# ตรวจสอบ
+go version
+```
+
+</details>
+
+### ขั้นตอนที่ 3: ดาวน์โหลดโปรแกรม
+
+เปิด Terminal (Mac/Linux) หรือ Command Prompt (Windows) แล้วพิมพ์:
+
+```bash
+# ดาวน์โหลด
+git clone https://github.com/huge8888/xiao-world.git
+
+# เข้าไปในโฟลเดอร์
+cd xiao-world
+```
+
+### ขั้นตอนที่ 4: รันสคริปต์ติดตั้งอัตโนมัติ
+
+#### 🪟 สำหรับ Windows:
+
+```bash
+setup.bat
+```
+
+โปรแกรมจะ:
+- ✅ ตรวจสอบว่ามี Go ติดตั้งอยู่หรือไม่
+- ✅ สร้างไฟล์ `.env` ให้อัตโนมัติ
+- ✅ ดาวน์โหลด dependencies ที่จำเป็น
+- ✅ Build โปรแกรม
+- ✅ พร้อมใช้งานทันที!
+
+#### 🍎 สำหรับ Mac/Linux:
+
+```bash
+# ให้สิทธิ์รัน
+chmod +x setup.sh
+
+# รัน
+./setup.sh
+```
+
+**เสร็จแล้ว!** 🎉 ง่ายมากใช่ไหมครับ
+
+---
+
+## ⚙️ ตั้งค่าอย่างไร?
+
+หลังจากรันสคริปต์ติดตั้งแล้ว คุณจะเห็นไฟล์ชื่อ `.env`
+
+### ขั้นตอนที่ 1: เปิดไฟล์ .env
+
+```bash
+# Windows
+notepad .env
+
+# Mac
+open -e .env
+
+# Linux
+nano .env
+```
+
+### ขั้นตอนที่ 2: เลือกระบบแปลภาษา (เลือก 1 อัน)
+
+#### 🥇 แนะนำ: ChatGPT (OpenAI) - ถูกและดี
+
+**ทำไมต้องเลือก ChatGPT?**
+- ✅ แปลได้ดีที่สุด
+- ✅ ราคาถูกมาก (~$0.15 ต่อ 1,000 คำ)
+- ✅ ได้เครดิตฟรี $5 เมื่อสมัครใหม่
+- ✅ ตั้งค่าง่าย
+
+**วิธีขอ API Key:**
+
+1. เปิดเว็บ https://platform.openai.com/signup
+2. สมัครบัญชี (ใช้ Gmail หรือ Email ใดก็ได้)
+3. ไปที่ https://platform.openai.com/api-keys
+4. คลิก **"Create new secret key"**
+5. ตั้งชื่อ เช่น `xiao-world`
+6. **คัดลอก API Key** (จะขึ้นต้นด้วย `sk-proj-...`)
+7. เก็บไว้ในที่ปลอดภัย!
+
+**ใส่ในไฟล์ .env:**
+
+```bash
+AI_TRANSLATOR_PROVIDER=openai
+AI_TRANSLATOR_API_KEY=sk-proj-xxxxxxxxxxxxx
+AI_TRANSLATOR_MODEL=gpt-4o-mini
+```
+
+---
+
+#### 🥈 ทางเลือก 2: Claude (Anthropic)
+
+**ข้อดี:** แปลภาษาเป็นธรรมชาติมาก เข้าใจบริบทได้ดี
+
+**วิธีขอ API Key:**
+
+1. ไปที่ https://console.anthropic.com/
+2. สมัครบัญชี
+3. ไปที่ Settings → API Keys
+4. คลิก **"Create Key"**
+5. คัดลอก API Key (ขึ้นต้นด้วย `sk-ant-...`)
+
+**ใส่ในไฟล์ .env:**
+
+```bash
+AI_TRANSLATOR_PROVIDER=anthropic
+AI_TRANSLATOR_API_KEY=sk-ant-xxxxxxxxxxxxx
+AI_TRANSLATOR_MODEL=claude-3-haiku-20240307
+```
+
+**ราคา:** ~$0.25 ต่อ 1,000 คำ
+
+---
+
+#### 🥉 ทางเลือก 3: Gemini (Google AI) - ฟรี!
+
+**ข้อดี:** มีแพลนฟรี! เหมาะสำหรับทดลองใช้
+
+**วิธีขอ API Key:**
+
+1. ไปที่ https://makersuite.google.com/app/apikey
+2. Login ด้วย Google Account
+3. คลิก **"Create API Key"**
+4. เลือก Project (หรือสร้างใหม่)
+5. คัดลอก API Key (ขึ้นต้นด้วย `AIzaSy...`)
+
+**ใส่ในไฟล์ .env:**
+
+```bash
+AI_TRANSLATOR_PROVIDER=google
+AI_TRANSLATOR_API_KEY=AIzaSyxxxxxxxxxxxxx
+AI_TRANSLATOR_MODEL=gemini-1.5-flash
+```
+
+**ราคา:** **ฟรี!** (มี quota จำกัดที่ 15 requests/minute)
+
+---
+
+### ขั้นตอนที่ 3: ตั้งค่าแพลตฟอร์มที่ต้องการ
+
+เปิดเฉพาะแพลตฟอร์มที่คุณต้องการใช้งาน:
+
+#### 🐦 Twitter / X
+
+<details>
+<summary><b>คลิกเพื่อดูวิธีขอ API Key</b></summary>
+
+**ขั้นตอน:**
+
+1. ไปที่ https://developer.twitter.com/en/portal/dashboard
+2. สมัคร Developer Account (ใช้บัญชี Twitter ปกติ)
+3. กรอกแบบฟอร์มบอกว่าจะใช้ทำอะไร (บอกตามตรงว่า "Auto-posting content")
+4. สร้าง App ใหม่:
+   - App name: `xiao-world` (หรือชื่ออื่น)
+   - Description: `Auto-posting from RedNote`
+5. ไปที่แท็บ **"Keys and tokens"**
+6. ใน OAuth 2.0 → คลิก **"Generate"**
+7. คัดลอก **Bearer Token**
+
+**ใส่ในไฟล์ .env:**
+
+```bash
+TWITTER_ENABLED=true
+TWITTER_BEARER_TOKEN=AAAAAAAAxxxxxxxxxxxxxxxxx
+```
+
+**ฟรี!** ไม่เสียค่าใช้จ่าย ✅
+
+</details>
+
+---
+
+#### 📘 Facebook
+
+<details>
+<summary><b>คลิกเพื่อดูวิธีขอ API Key</b></summary>
+
+**ขั้นตอน:**
+
+1. ไปที่ https://developers.facebook.com/
+2. สมัครบัญชี Developer
+3. สร้าง App ใหม่ (เลือกประเภท **"Business"**)
+4. เพิ่ม Products:
+   - Facebook Login
+   - Pages
+5. ไปที่ Tools → **Graph API Explorer**
+6. เลือก Page ที่ต้องการโพสต์
+7. ขอ permissions:
+   - `pages_manage_posts`
+   - `pages_read_engagement`
+8. Generate **Page Access Token**
+9. หา Page ID:
+   - ไปที่เพจของคุณ
+   - About → Page ID
+
+**ใส่ในไฟล์ .env:**
+
+```bash
+FACEBOOK_ENABLED=true
+FACEBOOK_ACCESS_TOKEN=EAAxxxxxxxxxxxxx
+FACEBOOK_PAGE_ID=123456789
+```
+
+**ฟรี!** ✅
+
+</details>
+
+---
+
+#### 🎵 TikTok
+
+<details>
+<summary><b>คลิกเพื่อดูวิธีขอ API Key</b></summary>
+
+⚠️ **หมายเหตุ:** TikTok API ต้องรออนุมัติ 1-2 สัปดาห์
+
+**ขั้นตอน:**
+
+1. ไปที่ https://developers.tiktok.com/
+2. สมัครบัญชี Developer
+3. สร้าง App และเลือก **"Content Posting API"**
+4. รอ TikTok ตรวจสอบและอนุมัติ
+5. หลังได้รับอนุมัติ → ขอ Access Token
+
+**ใส่ในไฟล์ .env:**
+
+```bash
+TIKTOK_ENABLED=true
+TIKTOK_ACCESS_TOKEN=xxxxxxxxxxxxx
+TIKTOK_CLIENT_KEY=xxxxxxxxxxxxx
+TIKTOK_CLIENT_SECRET=xxxxxxxxxxxxx
+```
+
+</details>
+
+---
+
+#### 🎬 YouTube
+
+<details>
+<summary><b>คลิกเพื่อดูวิธีขอ API Key</b></summary>
+
+**ขั้นตอน:**
+
+1. ไปที่ https://console.cloud.google.com/
+2. สร้าง Project ใหม่
+3. เปิด **"YouTube Data API v3"**:
+   - ค้นหา "YouTube Data API v3"
+   - คลิก **"Enable"**
+4. สร้าง OAuth 2.0 Credentials:
+   - APIs & Services → Credentials
+   - Create Credentials → **OAuth client ID**
+   - Application type: **Desktop app**
+   - คัดลอก Client ID และ Client Secret
+5. ขอ Tokens ผ่าน OAuth flow
+
+**ใส่ในไฟล์ .env:**
+
+```bash
+YOUTUBE_ENABLED=true
+YOUTUBE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+YOUTUBE_CLIENT_SECRET=xxxxxxxxxxxxx
+YOUTUBE_ACCESS_TOKEN=ya29.xxxxxxxxxxxxx
+YOUTUBE_REFRESH_TOKEN=1//xxxxxxxxxxxxx
+```
+
+**ฟรี!** (มี quota 10,000 units/day) ✅
+
+</details>
+
+---
+
+### ขั้นตอนที่ 4: บันทึกไฟล์
+
+กด **Ctrl+S** (Windows/Linux) หรือ **Cmd+S** (Mac) เพื่อบันทึก
+
+---
+
+## 🎮 เริ่มใช้งานอย่างไร?
+
+### ขั้นตอนที่ 1: เปิดโปรแกรม
+
+```bash
+# Windows
+xiao-world.exe
+
+# Mac/Linux
+./xiao-world
+```
+
+### ขั้นตอนที่ 2: ตรวจสอบว่าเปิดสำเร็จ
+
+คุณจะเห็นข้อความคล้ายๆ นี้:
+
+```
+INFO ✅ ใช้ AI Translator: openai (model: gpt-4o-mini)
+INFO ✅ Twitter 发布器已启用
+INFO ✅ Facebook 发布器已启用
+INFO 🚀 多平台发布系统已初始化，启用了 2 个平台
+INFO 启动 HTTP 服务器: :18060
+```
+
+ถ้าเห็นแบบนี้ แสดงว่า **พร้อมใช้งานแล้ว!** ✅
+
+---
+
+### ขั้นตอนที่ 3: เชื่อมต่อกับ Claude Desktop (หรือ AI อื่นๆ)
+
+โปรแกรมนี้ทำงานผ่าน **MCP Protocol** คุณสามารถใช้งานผ่าน:
+
+- ✅ Claude Desktop (แนะนำ)
+- ✅ ChatGPT (ถ้ารองรับ MCP)
+- ✅ AI อื่นๆ ที่รองรับ MCP
+
+#### ตั้งค่า Claude Desktop:
+
+1. เปิด **Claude Desktop**
+2. ไปที่ **Settings** (⚙️) → **Developer** → **Edit Config**
+3. เพิ่มโค้ดนี้:
+
+```json
+{
+  "mcpServers": {
+    "xiao-world": {
+      "command": "/path/to/xiao-world/xiao-world",
+      "args": []
+    }
+  }
+}
+```
+
+**⚠️ สำคัญ:** เปลี่ยน `/path/to/xiao-world/xiao-world` เป็น path จริงของโปรแกรม
+
+**ตัวอย่าง:**
+- Windows: `C:\\Users\\YourName\\xiao-world\\xiao-world.exe`
+- Mac: `/Users/yourname/xiao-world/xiao-world`
+- Linux: `/home/yourname/xiao-world/xiao-world`
+
+4. บันทึกและ **Restart Claude Desktop**
+
+---
+
+## 🤖 ใช้งานแบบ No-Code ด้วย n8n
+
+### 🎯 สำหรับมือใหม่ที่ไม่อยากเขียนโค้ด!
+
+**n8n** = เครื่องมือสร้าง workflow อัตโนมัติแบบลากวาง ไม่ต้องเขียนโค้ดเลย!
+
+### ✨ ทำอะไรได้?
+
+- 🎨 **ลากวาง** - สร้าง workflow ด้วย visual editor
+- ⏰ **ตั้งเวลา** - โพสต์อัตโนมัติทุกวัน
+- 🤖 **ผสม AI** - ใช้ ChatGPT สร้างเนื้อหา
+- 🌍 **หลายแพลตฟอร์ม** - โพสต์พร้อมกันได้
+
+### 🚀 เริ่มต้นใช้งาน (3 ขั้นตอน)
+
+```bash
+# 1. เข้าไปในโฟลเดอร์ n8n
+cd examples/n8n
+
+# 2. รัน n8n
+docker-compose up -d
+
+# 3. เปิดเบราว์เซอร์
+http://localhost:5678
+```
+
+### 📚 คู่มือฉบับเต็ม
+
+อ่านคู่มือละเอียดแบบ step-by-step ที่: **[examples/n8n/README-N8N.md](examples/n8n/README-N8N.md)**
+
+### 🎁 ได้อะไร?
+
+- ✅ **Workflow พร้อมใช้** - Import ได้เลย
+- ✅ **คู่มือภาษาไทย** - อ่านเข้าใจง่าย
+- ✅ **ตัวอย่างจริง** - ทำตามได้ทันที
+- ✅ **ฟรี 100%** - ไม่มีค่าใช้จ่าย
+
+---
+
+## 🎨 ตัวอย่างการใช้งาน
+
+### ตัวอย่างที่ 1: โพสต์ไป Twitter
+
+พิมพ์ใน Claude Desktop:
+
+```
+ช่วยเอาโพสต์จากเสี้ยวหงชูนี้ไปโพสต์ใน Twitter ด้วย
+feed_id: abc123xyz
+```
+
+Claude จะ:
+1. ดึงเนื้อหาจากเสี้ยวหงชู
+2. แปลเป็นภาษาอังกฤษ (หรือภาษาที่คุณกำหนด)
+3. โพสต์ไป Twitter
+4. ส่งลิงก์โพสต์กลับมาให้คุณ
+
+**ผลลัพธ์:**
+```
+✅ โพสต์สำเร็จ!
+🔗 https://twitter.com/yourusername/status/1234567890
+```
+
+---
+
+### ตัวอย่างที่ 2: โพสต์ไปทุกแพลตฟอร์มพร้อมกัน
+
+```
+เอาโพสต์นี้ไปโพสต์ทุกแพลตฟอร์มเลย
+feed_id: abc123xyz
+```
+
+**ผลลัพธ์:**
+```
+📊 ผลการเผยแพร่:
+
+✅ Twitter: สำเร็จ
+   🔗 https://twitter.com/xxx/status/123
+
+✅ Facebook: สำเร็จ
+   🔗 https://facebook.com/123
+
+❌ TikTok: ล้มเหลว
+   ⚠️ เหตุผล: โพสต์นี้ไม่มีวิดีโอ
+
+✅ YouTube: ข้าม (ไม่ได้เปิดใช้งาน)
+
+📈 สรุป: 2 สำเร็จ, 1 ล้มเหลว, 1 ข้าม
+```
+
+---
+
+### ตัวอย่างที่ 3: ตั้งเวลาโพสต์
+
+```
+กำหนดเวลาโพสต์ไป Twitter และ Facebook
+พรุ่งนี้เวลา 10:00 น.
+feed_id: abc123xyz
+```
+
+**ผลลัพธ์:**
+```
+✅ สร้างงานตั้งเวลาสำเร็จ!
+
+🆔 Job ID: schedule-123-abc
+📅 เวลาเผยแพร่: 2025-11-08 10:00:00
+📱 แพลตฟอร์ม: Twitter, Facebook
+📝 เนื้อหา: [ดูรายละเอียด]
+```
+
+---
+
+## 🐛 แก้ปัญหาที่พบบ่อย
+
+### ❌ ปัญหา: โปรแกรมรันไม่ได้
+
+**อาการ:** Double click แล้วโปรแกรมปิดทันที
+
+**วิธีแก้:**
+
+1. **อย่า** double click โปรแกรม
+2. เปิด Terminal/Command Prompt
+3. `cd` เข้าไปในโฟลเดอร์ xiao-world
+4. รันด้วยคำสั่ง:
+   ```bash
+   # Windows
+   .\xiao-world.exe
+
+   # Mac/Linux
+   ./xiao-world
+   ```
+5. อ่าน error message ที่ขึ้นมา
+
+**Error ที่พบบ่อย:**
+
+| Error | สาเหตุ | วิธีแก้ |
+|-------|--------|---------|
+| `cannot find .env` | ไม่มีไฟล์ .env | รัน `setup.bat` หรือ `setup.sh` ใหม่ |
+| `invalid API key` | API Key ผิด | เช็คไฟล์ .env ว่าใส่ถูกไหม |
+| `port 18060 already in use` | มีโปรแกรมอื่นใช้ port นี้อยู่ | ปิดโปรแกรมเดิมหรือเปลี่ยน port |
+
+---
+
+### ❌ ปัญหา: แปลภาษาไม่ได้
+
+**อาการ:** Error: `401 Unauthorized` หรือ `Invalid API Key`
+
+**วิธีแก้:**
+
+1. เช็คว่า API Key ถูกต้องไหม
+   - เปิดไฟล์ `.env`
+   - ตรวจสอบ `AI_TRANSLATOR_API_KEY`
+   - ลอง copy-paste ใหม่ (อย่าพิมพ์เอง)
+
+2. เช็คว่ามีเครดิตเหลือไหม
+   - OpenAI: https://platform.openai.com/usage
+   - Anthropic: https://console.anthropic.com/settings/billing
+   - Google: https://makersuite.google.com/app/apikey
+
+3. ลองสร้าง API Key ใหม่
+
+---
+
+### ❌ ปัญหา: โพสต์ไป Twitter ไม่ได้
+
+**อาการ:** Error: `403 Forbidden` หรือ `Unauthorized`
+
+**วิธีแก้:**
+
+1. เช็ค Bearer Token
+   - เปิด https://developer.twitter.com/en/portal/projects-and-apps
+   - สร้าง token ใหม่
+   - ใส่ในไฟล์ `.env`
+
+2. เช็ค App Permissions
+   - ไปที่แท็บ **"Settings"**
+   - User authentication settings → **Edit**
+   - เลือก **"Read and Write"**
+   - บันทึก
+
+3. รอสักครู่แล้วลองใหม่ (ใช้เวลา propagate 1-2 นาที)
+
+---
+
+### ❌ ปัญหา: ไม่เห็น MCP tools ใน Claude Desktop
+
+**อาการ:** Claude บอกว่าไม่รู้จักคำสั่ง xiao-world
+
+**วิธีแก้:**
+
+1. เช็คว่าโปรแกรม xiao-world กำลังรันอยู่หรือไม่
+2. เปิด config ของ Claude Desktop
+   - Mac: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+3. เช็คว่า path ถูกต้องไหม
+4. **Restart Claude Desktop** (สำคัญมาก!)
+5. ลองพิมพ์: `list available tools`
+
+---
+
+## ❓ คำถามที่พบบ่อย (FAQ)
+
+### Q1: ใช้ฟรีได้ไหม?
+
+**ตัวโปรแกรม:** ฟรี 100%! เป็น Open Source
+
+**API Keys:**
+- แพลตฟอร์มส่วนใหญ่ฟรี (Twitter, Facebook, YouTube)
+- AI Translator เสียเงินเล็กน้อย ($0.15-0.25 ต่อ 1,000 คำ)
+- Gemini มีแพลนฟรี!
+
+---
+
+### Q2: ปลอดภัยไหม?
+
+**ใช่!** เพราะ:
+- ✅ โค้ด Open Source ตรวจสอบได้เอง
+- ✅ API Keys เก็บไว้ในเครื่องคุณเท่านั้น
+- ✅ ไม่ได้ส่งข้อมูลไปที่ไหน
+- ✅ ไม่มี Backdoor หรือ Malware
+
+---
+
+### Q3: รองรับภาษาไทยไหม?
+
+**รองรับ!** แปลจากจีนเป็นภาษาไทยได้
+
+แก้ไขที่ไฟล์ `pkg/processor/processor.go` บรรทัดที่ 50-60:
+
+```go
+// เปลี่ยนจาก
+targetLang := "en"
+
+// เป็น
+targetLang := "th"
+```
+
+---
+
+### Q4: ทำไมต้องใช้ AI แปล? Google Translate ไม่ดีเหรอ?
+
+**AI (ChatGPT, Claude, Gemini) แปลได้:**
+- ✅ เป็นธรรมชาติกว่า
+- ✅ เข้าใจบริบทและความหมาย
+- ✅ รักษา tone and voice ได้ดี
+- ✅ ราคาไม่แพง (~$0.15-0.25 ต่อ 1,000 คำ)
+
+**Google Translate:**
+- ❌ แปลตรงตัว ไม่เป็นธรรมชาติ
+- ❌ ไม่เข้าใจบริบท
+- ✅ แต่ฟรี!
+
+---
+
+### Q5: ต้องใช้กับ Claude Desktop เท่านั้นเหรอ?
+
+**ไม่!** ใช้กับ AI ใดก็ได้ที่รองรับ **MCP Protocol**
+
+เช่น:
+- ✅ Claude Desktop
+- ✅ Cursor
+- ✅ ChatGPT (ถ้ารองรับ MCP)
+- ✅ AI อื่นๆ ในอนาคต
+
+---
+
+### Q6: ถ้าโพสต์ล้มเหลวจะเกิดอะไรขึ้น?
+
+โปรแกรมจะ:
+1. แจ้ง error message ให้คุณทราบ
+2. ไม่โพสต์ซ้ำอัตโนมัติ (เพื่อป้องกัน spam)
+3. บันทึก log ไว้ให้ดูในภายหลัง
+
+คุณสามารถ:
+- แก้ไขปัญหาแล้วลองใหม่
+- ข้ามไปโพสต์แพลตฟอร์มอื่นก่อน
+
+---
+
+### Q7: รองรับวิดีโอขนาดใหญ่ไหม?
+
+**ขึ้นอยู่กับแพลตฟอร์ม:**
+
+| แพลตฟอร์ม | ขนาดสูงสุด | ความยาวสูงสุด |
+|-----------|------------|---------------|
+| TikTok | 287 MB | 10 นาที |
+| Facebook | 1 GB | 120 นาที |
+| YouTube | 128 GB | 12 ชั่วโมง |
+
+---
+
+### Q8: โพสต์ได้กี่ครั้งต่อวัน?
+
+**ไม่มีข้อจำกัดจากโปรแกรม** แต่แพลตฟอร์มมีข้อจำกัด:
+
+| แพลตฟอร์ม | ข้อจำกัด |
+|-----------|----------|
+| Twitter | ~2,400 tweets/วัน (ปกติไม่มีใครถึง) |
+| Facebook | ไม่จำกัด (แต่ไม่ควร spam) |
+| TikTok | 3-5 วิดีโอ/วัน (แนะนำ) |
+| YouTube | ไม่จำกัด |
+
+**คำแนะนำ:** อย่าโพสต์เยอะเกินไป อาจโดน flag เป็น spam
+
+---
+
+### Q9: ต้องเปิดโปรแกรมทิ้งไว้ตลอดเวลาไหม?
+
+**ถ้าใช้ตั้งเวลาโพสต์:** ต้องเปิดทิ้งไว้
+**ถ้าโพสต์แบบ manual:** เปิดเฉพาะตอนใช้งานก็พอ
+
+**Tips:** รันบน server หรือ VPS จะดีกว่า (เพื่อให้ทำงานได้ 24/7)
+
+---
+
+## 📞 ต้องการความช่วยเหลือเพิ่มเติม?
+
+### 💬 ติดต่อเรา
+
+- 📧 Email: [ใส่ email ของคุณ]
+- 🐛 GitHub Issues: https://github.com/huge8888/xiao-world/issues
+- 📚 เอกสารเพิ่มเติม:
+  - [คู่มือภาษาไทยฉบับเต็ม](README-TH.md)
+  - [Multi-platform Publishing Guide](README_MULTIPLATFORM.md)
+
+### 🙏 ขอบคุณและเครดิต
+
+โปรแกรมนี้พัฒนาต่อยอดจาก:
+- [xiaohongshu-mcp](https://github.com/xpzouying/xiaohongshu-mcp) โดย @xpzouying
+- ชุมชน Go และ MCP Protocol
+- คุณทุกคน! ที่ใช้งานและสนับสนุนโปรแกรมนี้ ❤️
+
+---
+
+## 📄 License
+
+MIT License - ใช้ฟรี แก้ไขได้ แจกจ่ายได้ต้องการ
+
+คุณสามารถ:
+- ✅ ใช้งานส่วนตัวหรือธุรกิจ
+- ✅ แก้ไขโค้ดตามต้องการ
+- ✅ แจกจ่ายต่อได้
+
+---
+
+<div align="center">
+
+## 🌟 ให้ดาวโปรเจกต์นี้ถ้าชอบนะครับ!
+
+**สนุกกับการเผยแพร่เนื้อหาไปทั่วโลก! 🌍✨**
+
+Made with ❤️ in Thailand 🇹🇭
+
+</div>

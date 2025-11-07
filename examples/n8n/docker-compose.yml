@@ -8,35 +8,43 @@ services:
     ports:
       - "5678:5678"
     environment:
-      # Basic Settings
+      # ตั้งค่าพื้นฐาน
       - N8N_HOST=0.0.0.0
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
 
-      # Timezone
+      # เปิดใช้งาน Webhook
+      - WEBHOOK_URL=http://localhost:5678/
+
+      # ตั้งค่าภาษา (ไทย/อังกฤษ)
+      - N8N_DEFAULT_LOCALE=en
+
+      # เปิดใช้งาน community nodes
+      - N8N_COMMUNITY_PACKAGES_ENABLED=true
+
+      # ตั้งค่า timezone
       - GENERIC_TIMEZONE=Asia/Bangkok
       - TZ=Asia/Bangkok
 
-      # Security (optional - uncomment for production)
+      # เพิ่ม security (ถ้าต้องการ)
       # - N8N_BASIC_AUTH_ACTIVE=true
       # - N8N_BASIC_AUTH_USER=admin
-      # - N8N_BASIC_AUTH_PASSWORD=change_me_please
-
-      # Locale (optional - for Thai interface)
-      # - N8N_DEFAULT_LOCALE=th-TH
+      # - N8N_BASIC_AUTH_PASSWORD=changeme123
     volumes:
-      # Persistent data
+      # เก็บข้อมูล workflows และ credentials
       - n8n_data:/home/node/.n8n
-      # Workflows (optional - for backup)
+
+      # Mount ไฟล์ workflow (ไม่บังคับ - สำหรับ backup)
       - ./workflows:/workflows
     extra_hosts:
-      # Allow n8n to connect to xiao-world on host machine
+      # ให้ n8n เชื่อมต่อกับ xiao-world ที่รันบน host
       - "host.docker.internal:host-gateway"
     networks:
       - xiao-world-network
 
 volumes:
   n8n_data:
+    driver: local
 
 networks:
   xiao-world-network:

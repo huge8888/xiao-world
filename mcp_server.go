@@ -10,96 +10,96 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// MCP 工具参数结构体定义
+// โครงสร้างพารามิเตอร์สำหรับ MCP tools
 
-// PublishContentArgs 发布内容的参数
+// PublishContentArgs พารามิเตอร์สำหรับเผยแพร่เนื้อหา
 type PublishContentArgs struct {
-	Title   string   `json:"title" jsonschema:"内容标题（小红书限制：最多20个中文字或英文单词）"`
-	Content string   `json:"content" jsonschema:"正文内容，不包含以#开头的标签内容，所有话题标签都用tags参数来生成和提供即可"`
-	Images  []string `json:"images" jsonschema:"图片路径列表（至少需要1张图片）。支持两种方式：1. HTTP/HTTPS图片链接（自动下载）；2. 本地图片绝对路径（推荐，如:/Users/user/image.jpg）"`
-	Tags    []string `json:"tags,omitempty" jsonschema:"话题标签列表（可选参数），如 [美食, 旅行, 生活]"`
+	Title   string   `json:"title" jsonschema:"หัวข้อเนื้อหา (ข้อจำกัดของเสี้ยวหงชู: สูงสุด 20 คำภาษาจีนหรือคำภาษาอังกฤษ)"`
+	Content string   `json:"content" jsonschema:"เนื้อหาหลัก ไม่รวม tags ที่ขึ้นต้นด้วย # ให้ใช้พารามิเตอร์ tags แทน"`
+	Images  []string `json:"images" jsonschema:"รายการเส้นทางรูปภาพ (ต้องมีอย่างน้อย 1 รูป) รองรับ 2 วิธี: 1. ลิงก์ HTTP/HTTPS (ดาวน์โหลดอัตโนมัติ) 2. เส้นทางรูปภาพในเครื่อง (แนะนำ, เช่น: /Users/user/image.jpg)"`
+	Tags    []string `json:"tags,omitempty" jsonschema:"รายการ tags หัวข้อ (ไม่บังคับ) เช่น [อาหาร, ท่องเที่ยว, ชีวิต]"`
 }
 
-// PublishVideoArgs 发布视频的参数（仅支持本地单个视频文件）
+// PublishVideoArgs พารามิเตอร์สำหรับเผยแพร่วิดีโอ (รองรับเฉพาะไฟล์วิดีโอในเครื่อง 1 ไฟล์)
 type PublishVideoArgs struct {
-	Title   string   `json:"title" jsonschema:"内容标题（小红书限制：最多20个中文字或英文单词）"`
-	Content string   `json:"content" jsonschema:"正文内容，不包含以#开头的标签内容，所有话题标签都用tags参数来生成和提供即可"`
-	Video   string   `json:"video" jsonschema:"本地视频绝对路径（仅支持单个视频文件，如:/Users/user/video.mp4）"`
-	Tags    []string `json:"tags,omitempty" jsonschema:"话题标签列表（可选参数），如 [美食, 旅行, 生活]"`
+	Title   string   `json:"title" jsonschema:"หัวข้อเนื้อหา (ข้อจำกัดของเสี้ยวหงชู: สูงสุด 20 คำภาษาจีนหรือคำภาษาอังกฤษ)"`
+	Content string   `json:"content" jsonschema:"เนื้อหาหลัก ไม่รวม tags ที่ขึ้นต้นด้วย # ให้ใช้พารามิเตอร์ tags แทน"`
+	Video   string   `json:"video" jsonschema:"เส้นทางวิดีโอในเครื่อง (รองรับเฉพาะไฟล์เดียว เช่น: /Users/user/video.mp4)"`
+	Tags    []string `json:"tags,omitempty" jsonschema:"รายการ tags หัวข้อ (ไม่บังคับ) เช่น [อาหาร, ท่องเที่ยว, ชีวิต]"`
 }
 
-// SearchFeedsArgs 搜索内容的参数
+// SearchFeedsArgs พารามิเตอร์สำหรับค้นหาเนื้อหา
 type SearchFeedsArgs struct {
-	Keyword string       `json:"keyword" jsonschema:"搜索关键词"`
-	Filters FilterOption `json:"filters,omitempty" jsonschema:"筛选选项"`
+	Keyword string       `json:"keyword" jsonschema:"คำค้นหา"`
+	Filters FilterOption `json:"filters,omitempty" jsonschema:"ตัวเลือกกรอง"`
 }
 
-// FilterOption 筛选选项结构体
+// FilterOption โครงสร้างตัวเลือกการกรอง
 type FilterOption struct {
-	SortBy      string `json:"sort_by,omitempty" jsonschema:"排序依据: 综合|最新|最多点赞|最多评论|最多收藏,默认为'综合'"`
-	NoteType    string `json:"note_type,omitempty" jsonschema:"笔记类型: 不限|视频|图文,默认为'不限'"`
-	PublishTime string `json:"publish_time,omitempty" jsonschema:"发布时间: 不限|一天内|一周内|半年内,默认为'不限'"`
-	SearchScope string `json:"search_scope,omitempty" jsonschema:"搜索范围: 不限|已看过|未看过|已关注,默认为'不限'"`
-	Location    string `json:"location,omitempty" jsonschema:"位置距离: 不限|同城|附近,默认为'不限'"`
+	SortBy      string `json:"sort_by,omitempty" jsonschema:"เรียงตาม: 综合|最新|最多点赞|最多评论|最多收藏, ค่าเริ่มต้น '综合'"`
+	NoteType    string `json:"note_type,omitempty" jsonschema:"ประเภทโน้ต: 不限|视频|图文, ค่าเริ่มต้น '不限'"`
+	PublishTime string `json:"publish_time,omitempty" jsonschema:"เวลาเผยแพร่: 不限|一天内|一周内|半年内, ค่าเริ่มต้น '不限'"`
+	SearchScope string `json:"search_scope,omitempty" jsonschema:"ขอบเขตการค้นหา: 不限|已看过|未看过|已关注, ค่าเริ่มต้น '不限'"`
+	Location    string `json:"location,omitempty" jsonschema:"ระยะตำแหน่ง: 不限|同城|附近, ค่าเริ่มต้น '不限'"`
 }
 
-// FeedDetailArgs 获取Feed详情的参数
+// FeedDetailArgs พารามิเตอร์สำหรับดึงรายละเอียด Feed
 type FeedDetailArgs struct {
-	FeedID    string `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表获取"`
-	XsecToken string `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
+	FeedID    string `json:"feed_id" jsonschema:"ID โน้ตเสี้ยวหงชู ดึงจากรายการ Feed"`
+	XsecToken string `json:"xsec_token" jsonschema:"Access token ดึงจากฟิลด์ xsecToken ในรายการ Feed"`
 }
 
-// UserProfileArgs 获取用户主页的参数
+// UserProfileArgs พารามิเตอร์สำหรับดึงหน้าโปรไฟล์ผู้ใช้
 type UserProfileArgs struct {
-	UserID    string `json:"user_id" jsonschema:"小红书用户ID，从Feed列表获取"`
-	XsecToken string `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
+	UserID    string `json:"user_id" jsonschema:"ID ผู้ใช้เสี้ยวหงชู ดึงจากรายการ Feed"`
+	XsecToken string `json:"xsec_token" jsonschema:"Access token ดึงจากฟิลด์ xsecToken ในรายการ Feed"`
 }
 
-// PostCommentArgs 发表评论的参数
+// PostCommentArgs พารามิเตอร์สำหรับแสดงความคิดเห็น
 type PostCommentArgs struct {
-	FeedID    string `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表获取"`
-	XsecToken string `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
-	Content   string `json:"content" jsonschema:"评论内容"`
+	FeedID    string `json:"feed_id" jsonschema:"ID โน้ตเสี้ยวหงชู ดึงจากรายการ Feed"`
+	XsecToken string `json:"xsec_token" jsonschema:"Access token ดึงจากฟิลด์ xsecToken ในรายการ Feed"`
+	Content   string `json:"content" jsonschema:"เนื้อหาความคิดเห็น"`
 }
 
-// LikeFeedArgs 点赞参数
+// LikeFeedArgs พารามิเตอร์สำหรับกดไลค์
 type LikeFeedArgs struct {
-	FeedID    string `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表获取"`
-	XsecToken string `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
-	Unlike    bool   `json:"unlike,omitempty" jsonschema:"是否取消点赞，true为取消点赞，false或未设置则为点赞"`
+	FeedID    string `json:"feed_id" jsonschema:"ID โน้ตเสี้ยวหงชู ดึงจากรายการ Feed"`
+	XsecToken string `json:"xsec_token" jsonschema:"Access token ดึงจากฟิลด์ xsecToken ในรายการ Feed"`
+	Unlike    bool   `json:"unlike,omitempty" jsonschema:"ยกเลิกไลค์หรือไม่ true=ยกเลิกไลค์, false หรือไม่ระบุ=ไลค์"`
 }
 
-// FavoriteFeedArgs 收藏参数
+// FavoriteFeedArgs พารามิเตอร์สำหรับบันทึก
 type FavoriteFeedArgs struct {
-	FeedID     string `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表获取"`
-	XsecToken  string `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
-	Unfavorite bool   `json:"unfavorite,omitempty" jsonschema:"是否取消收藏，true为取消收藏，false或未设置则为收藏"`
+	FeedID     string `json:"feed_id" jsonschema:"ID โน้ตเสี้ยวหงชู ดึงจากรายการ Feed"`
+	XsecToken  string `json:"xsec_token" jsonschema:"Access token ดึงจากฟิลด์ xsecToken ในรายการ Feed"`
+	Unfavorite bool   `json:"unfavorite,omitempty" jsonschema:"ยกเลิกบันทึกหรือไม่ true=ยกเลิกบันทึก, false หรือไม่ระบุ=บันทึก"`
 }
 
-// PublishToPlatformArgs 发布到特定平台的参数
+// PublishToPlatformArgs พารามิเตอร์สำหรับเผยแพร่ไปแพลตฟอร์มเฉพาะ
 type PublishToPlatformArgs struct {
-	FeedID    string `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表或搜索结果获取"`
-	XsecToken string `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
+	FeedID    string `json:"feed_id" jsonschema:"ID โน้ตเสี้ยวหงชู ดึงจากรายการ Feed หรือผลค้นหา"`
+	XsecToken string `json:"xsec_token" jsonschema:"Access token ดึงจากฟิลด์ xsecToken ในรายการ Feed"`
 }
 
-// PublishToAllPlatformsArgs 发布到所有平台的参数
+// PublishToAllPlatformsArgs พารามิเตอร์สำหรับเผยแพร่ไปทุกแพลตฟอร์ม
 type PublishToAllPlatformsArgs struct {
-	FeedID    string   `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表或搜索结果获取"`
-	XsecToken string   `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
-	Platforms []string `json:"platforms,omitempty" jsonschema:"平台列表（可选），支持: twitter, tiktok, facebook, youtube。如不指定则发布到所有已启用的平台"`
+	FeedID    string   `json:"feed_id" jsonschema:"ID โน้ตเสี้ยวหงชู ดึงจากรายการ Feed หรือผลค้นหา"`
+	XsecToken string   `json:"xsec_token" jsonschema:"Access token ดึงจากฟิลด์ xsecToken ในรายการ Feed"`
+	Platforms []string `json:"platforms,omitempty" jsonschema:"รายการแพลตฟอร์ม (ไม่บังคับ) รองรับ: twitter, tiktok, facebook, youtube ถ้าไม่ระบุจะเผยแพร่ไปทุกแพลตฟอร์มที่เปิดใช้งาน"`
 }
 
-// SchedulePublishArgs 定时发布的参数
+// SchedulePublishArgs พารามิเตอร์สำหรับกำหนดเวลาเผยแพร่
 type SchedulePublishArgs struct {
-	FeedID      string   `json:"feed_id" jsonschema:"小红书笔记ID，从Feed列表或搜索结果获取"`
-	XsecToken   string   `json:"xsec_token" jsonschema:"访问令牌，从Feed列表的xsecToken字段获取"`
-	Platforms   []string `json:"platforms" jsonschema:"平台列表，支持: twitter, tiktok, facebook, youtube"`
-	ScheduledAt string   `json:"scheduled_at" jsonschema:"定时发布时间，格式: 2006-01-02 15:04:05"`
+	FeedID      string   `json:"feed_id" jsonschema:"ID โน้ตเสี้ยวหงชู ดึงจากรายการ Feed หรือผลค้นหา"`
+	XsecToken   string   `json:"xsec_token" jsonschema:"Access token ดึงจากฟิลด์ xsecToken ในรายการ Feed"`
+	Platforms   []string `json:"platforms" jsonschema:"รายการแพลตฟอร์ม รองรับ: twitter, tiktok, facebook, youtube"`
+	ScheduledAt string   `json:"scheduled_at" jsonschema:"เวลาที่จะเผยแพร่ รูปแบบ: 2006-01-02 15:04:05"`
 }
 
-// CancelScheduledJobArgs 取消定时任务的参数
+// CancelScheduledJobArgs พารามิเตอร์สำหรับยกเลิกงานที่กำหนดเวลา
 type CancelScheduledJobArgs struct {
-	JobID string `json:"job_id" jsonschema:"任务ID，从schedule_publish返回或list_scheduled_jobs获取"`
+	JobID string `json:"job_id" jsonschema:"ID งาน ดึงจากผลลัพธ์ของ schedule_publish หรือ list_scheduled_jobs"`
 }
 
 // InitMCPServer 初始化 MCP Server
