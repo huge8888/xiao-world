@@ -740,7 +740,7 @@ Use xiaohongshu-mcp's video publishing feature.
 
 ### 📚 Complete Tutorial List
 
-1. **[n8n Complete Integration Tutorial](./examples/n8n/README.md)** - Workflow automation platform integration
+1. **[n8n Complete Integration Tutorial](https://github.com/huge8888/n8n-xiao-world)** - Workflow automation platform integration
 2. **[Cherry Studio Complete Configuration Tutorial](./examples/cherrystudio/README.md)** - Perfect AI client integration
 3. **[Claude Code + Kimi K2 Integration Tutorial](./examples/claude-code/claude-code-kimi-k2.md)** - If Claude Code's barrier is too high, then integrate with Kimi domestic LLM!
 4. **[AnythingLLM Complete Guide](./examples/anythingLLM/readme.md)** - AnythingLLM is an all-in-one multimodal AI client that supports workflow definition, multiple LLMs, and plugin extensions.
